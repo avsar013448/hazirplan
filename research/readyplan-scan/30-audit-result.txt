@@ -1,0 +1,82 @@
+ReadyPlan
+Dashboard
+Plans
+Sheets
+Groups
+Templates
+Assistant
+Route Builder
+Locations
+Audit
+Knowledge Check
+Achievements
+References
+Profile
+Help & Support
+Sign Out
+Dashboard
+Templates
+Groups
+Assistant
+1
+B
+Quick Questions
+
+A few quick questions about "TEST - HazırPlan Research" that help us score areas the plan data alone can't capture.
+
+Have you conducted a drill of this plan?
+
+Yes
+No
+
+Do you have an out-of-area emergency contact?
+
+Someone far enough away that a local disaster wouldn't affect them too.
+
+Yes
+No
+
+Do you have this plan and/or contact lists accessible offline?
+
+Select all that apply, or leave empty if none.
+
+Printed
+Handwritten
+Digital copy (USB, PDF, etc.)
+Binder / folder
+Other
+
+Have other household members seen or have access to this plan?
+
+Yes
+No
+
+Does at least one person outside your household know this plan exists?
+
+A friend, neighbor, or family member who could help coordinate if needed.
+
+Yes
+No
+Run Audit
+Plan Builder
+1/6
+What are you planning for?
+
+Choose a category, then select or describe your emergency.
+
+🌪️
+Natural Disasters
+
+Weather and geological events
+
+🏠
+Home Emergencies
+
+Issues within your residence
+
+🚗
+Travel & Transit
+
+Problems while away from home
+
+Continue

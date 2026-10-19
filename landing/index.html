@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HazırPlan — Ailenizin acil durum planı, afetten önce hazır olsun</title>
+<meta name="description" content="HazırPlan ailenizin deprem, yangın ve sel planını 1 saatte hazırlar. Ücretsiz. İnternet olmadan çalışır. Herkesin telefonunda.">
+<style>
+  :root{
+    --bg:#0f1420; --bg2:#161d2d; --card:#1c2536; --line:#2a3550;
+    --text:#eef2f8; --muted:#9aa8bf; --accent:#f59e0b; --accent2:#3b82f6; --ok:#34d399;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.6}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+  header{padding:28px 0;text-align:center}
+  .logo{font-weight:800;font-size:1.5rem;letter-spacing:-.02em}
+  .logo span{color:var(--accent)}
+  .badge{display:inline-block;background:var(--card);border:1px solid var(--line);color:var(--muted);font-size:.8rem;padding:4px 12px;border-radius:999px;margin-left:12px;vertical-align:middle}
+  .hero{padding:64px 0 48px;text-align:center}
+  .hero h1{font-size:clamp(1.9rem,4.5vw,3rem);font-weight:800;letter-spacing:-.03em;line-height:1.2}
+  .hero p.sub{font-size:1.15rem;color:var(--muted);max-width:640px;margin:18px auto 8px}
+  .pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0 30px}
+  .pill{background:var(--card);border:1px solid var(--line);padding:6px 14px;border-radius:999px;font-size:.85rem;color:var(--text)}
+  .pill b{color:var(--accent)}
+  .cta{display:inline-block;background:var(--accent);color:#111;font-weight:700;padding:14px 32px;border-radius:12px;text-decoration:none;font-size:1.05rem}
+  .cta:hover{filter:brightness(1.08)}
+  .fine{color:var(--muted);font-size:.85rem;margin-top:12px}
+  section{padding:48px 0}
+  h2{font-size:1.6rem;font-weight:800;text-align:center;margin-bottom:8px;letter-spacing:-.02em}
+  .sub{color:var(--muted);text-align:center;max-width:560px;margin:0 auto 32px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .card .num{color:var(--accent);font-weight:800;font-size:.85rem}
+  .card h3{margin:6px 0 8px;font-size:1.05rem}
+  .card p{color:var(--muted);font-size:.92rem}
+  .quote{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:20px 24px;max-width:680px;margin:0 auto;color:var(--text);font-size:1.02rem}
+  .quote small{display:block;color:var(--muted);margin-top:8px}
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  th,td{border:1px solid var(--line);padding:10px 12px;text-align:left}
+  th{background:var(--bg2);color:var(--muted);font-weight:600}
+  td.no{color:#f87171} td.yes{color:var(--ok)} td.mid{color:var(--accent)}
+  form{max-width:440px;margin:0 auto;display:flex;gap:10px}
+  input{flex:1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 14px;color:var(--text);font-size:1rem}
+  input:focus{outline:2px solid var(--accent)}
+  button{background:var(--accent);border:none;color:#111;font-weight:700;padding:13px 22px;border-radius:10px;font-size:1rem;cursor:pointer}
+  button:hover{filter:brightness(1.08)}
+  .formnote{color:var(--muted);font-size:.82rem;text-align:center;margin-top:14px}
+  .formnote a{color:var(--accent)}
+  footer{border-top:1px solid var(--line);margin-top:32px;padding:28px 0;color:var(--muted);font-size:.85rem;text-align:center}
+  #done{display:none;background:var(--card);border:1px solid var(--ok);border-radius:12px;padding:20px;max-width:440px;margin:0 auto;text-align:center}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="logo">Hazır<span>Plan</span></span><span class="badge">Yakında · Türkiye</span>
+  </div>
+</header>
+
+<div class="hero wrap">
+  <h1>Afet olduğunda ailen planı biliyor mu?</h1>
+  <p class="sub">HazırPlan, ailenizin acil durum planını <b>1 saatten kısa sürede</b> hazırlamanızı sağlar. Herkesin telefonunda, çevrimdışı çalışan tek bir plan.</p>
+  <div class="pills">
+    <span class="pill"><b>Ücretsiz</b> — kart gerekmez</span>
+    <span class="pill"><b>Çevrimdışı çalışır</b> — sinyal olmasa da</span>
+    <span class="pill"><b>Reklamsız</b> — veriniz cihazınızda kalır</span>
+  </div>
+  <a class="cta" href="#bekleme">Bekleme listesine yazıl</a>
+  <p class="fine">Erken erişim listesi · Önce sen dene, sonra ailene söyle</p>
+</div>
+
+<section class="wrap">
+  <h2>Neden şimdi?</h2>
+  <p class="sub">Çoğu aile yazılı bir plana sahip değil. Plan, olay anında "düşünülmeye" çalışılır — tam da geç kalınan anda.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="num">01</div>
+      <h3>Plan afetten ÖNCE var olmalı</h3>
+      <p>Deprem, yangın ya da sel anında kim ne yapacak, nereden çıkılacak, kim kimi arayacak? Bunlar olay anında değil, önceden karar verilir.</p>
+    </div>
+    <div class="card">
+      <div class="num">02</div>
+      <h3>Plan herkesin telefonunda olmalı</h3>
+      <p>Aile dağılmışsa, hiçbirinizin birbirinize ulaşmadan aynı bilgiye ihtiyacı var. Tek plan, her telefon, çevrimdışı.</p>
+    </div>
+    <div class="card">
+      <div class="num">03</div>
+      <h3>Plan tatbikatla canlı kalır</h3>
+      <p>Yazılıp unutulan plan, plan değildir. HazırPlan hatırlatır: ayda bir 10 dakikalık aile tatbikatı.</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Nasıl çalışıyor?</h2>
+  <p class="sub">Boş sayfa yok. Rehberli kurulum sizi adım adım yönetir.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="num">Adım 1</div>
+      <h3>Rehberle planı kur</h3>
+      <p>Deprem, yangın, sel senaryoları: tahliye rotaları, buluşma noktaları, görev dağılımı, iletişim ağacı. Sorular hazır, sadece cevaplayın.</p>
+    </div>
+    <div class="card">
+      <div class="num">Adım 2</div>
+      <h3>Aileye tek kodla gönder</h3>
+      <p>Herkes planı kendi telefonuna indirir. İnternet yoksa bile çalışır — kilit nokta tam da bu.</p>
+    </div>
+    <div class="card">
+      <div class="num">Adım 3</div>
+      <h3>Tatbikat yap, güncel tut</h3>
+      <p>Deprem çantasının son kullanma tarihleri ve aile tatbihatı hatırlatmalarıyla plan canlı kalır. İstersen yazdır, buzdolabına as.</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Neler var?</h2>
+  <div class="grid">
+    <div class="card"><h3>🗂️ Senaryo bazlı planlar</h3><p>Deprem, yangın, sel; her senaryo için ayrı tahliye rotası ve görev tanımı.</p></div>
+    <div class="card"><h3>👨‍👩‍👧 Aile paylaşımı</h3><p>Tek plan, herkesin telefonunda — çevrimdışı senkron.</p></div>
+    <div class="card"><h3>🎒 Deprem çantası envanteri</h3><p>Su ve ilaç son kullanma tarihleri takip edilir; kritik hiçbir şey geride kalmaz.</p></div>
+    <div class="card"><h3>📍 Buluşma noktaları</h3><p>Ailenize özel toplanma noktalarını haritada işaretleyin.</p></div>
+    <div class="card"><h3>🔔 Tatbikat hatırlatıcıları</h3><p>Ayda bir 10 dakika: plan unutulmaz.</p></div>
+    <div class="card"><h3>🖨️ Yazdırılabilir yedek</h3><p>Telefon bitse bile buzdolabında asılı bir plan var.</p></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Diğer uygulamalardan farkımız</h2>
+  <p class="sub">Bilgi uygulaması değil, plan uygulaması. Resmi kaynaklar afet anında bilgi verir; HazırPlan afetten önce ailenizin eline planı verir.</p>
+  <table>
+    <tr><th></th><th>HazırPlan</th><th>AFAD Acil</th><th>Hazırlık rehberleri</th><th>Deprem uyarı apps</th></tr>
+    <tr><td>Aile planı kurulumu</td><td class="yes">✓ Rehberli</td><td class="no">✗</td><td class="mid">Kısmi</td><td class="no">✗</td></tr>
+    <tr><td>Her telefona paylaşım</td><td class="yes">✓ Çevrimdışı</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+    <tr><td>Tatbikat hatırlatma</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+    <tr><td>Reklam yok, veri cihazda</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">Reklamlı</td><td class="mid">Değişir</td></tr>
+    <tr><td>Deprem anlık uyarı</td><td class="no">✗</td><td class="yes">✓</td><td class="mid">Kısmi</td><td class="yes">✓</td></tr>
+  </table>
+  <p class="formnote" style="margin-top:14px">Deprem uyarıları için resmi kaynakları (AFAD, Kandilli) kullanmaya devam edin — HazırPlan onların yerine değil, yanına gelir.</p>
+</section>
+
+<section class="wrap" id="bekleme">
+  <h2>Erken erişim listesi</h2>
+  <p class="sub">İlk sürüm Türkiye'de başlıyor. Listeye yazıl, hazır olduğunda ilk sen dene.</p>
+  <!-- TODO: replace action with real form endpoint (Formspree / Netlify Forms / Sheet) before deploy -->
+  <form id="waitlist" action="#" method="POST" onsubmit="return handleSubmit(event)">
+    <input type="email" id="email" placeholder="E-posta adresiniz" required aria-label="E-posta adresiniz">
+    <button type="submit">Listeye yazıl</button>
+  </form>
+  <div id="done">✅ Kaydınız alındı — ilk sürüm çıkınca haber vereceğiz.<br><small>Gerçek kayıt için form uç noktası bağlanacak (aşağıdaki nota bakın).</small></div>
+  <p class="formnote">Spam yok, sadece lansman maili. Tercihen: <a href="mailto:hazirplan@example.com?subject=Bekleme%20listesi">hazirplan@example.com</a></p>
+</section>
+
+<footer>
+  <div class="wrap">
+    HazırPlan · "Plan, afetten önce var olmalı." · Yakında: iOS, Android ve web · © 2026
+  </div>
+</footer>
+
+<script>
+function handleSubmit(e){
+  e.preventDefault();
+  // Placeholder: swap for a real endpoint POST before deployment
+  document.getElementById('waitlist').style.display='none';
+  document.getElementById('done').style.display='block';
+  return false;
+}
+</script>
+</body>
+</html>

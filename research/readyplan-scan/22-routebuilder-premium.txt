@@ -1,0 +1,70 @@
+ReadyPlan
+Dashboard
+Plans
+Sheets
+Groups
+Templates
+Assistant
+Route Builder
+Locations
+Audit
+Knowledge Check
+Achievements
+References
+Profile
+Help & Support
+Sign Out
+Dashboard
+Templates
+Groups
+Assistant
+1
+B
+Route Builder
+
+Plan your route, then create an EXFIL plan
+
+Calculate Routes
+Create EXFIL Plan
+Start & End Points
+Starting Point
+
+📍
+Or click on the map to set this point
+
+Destination
+Routes
+Waypoints
+Options
+
+No routes available yet.
+
+Enter origin and destination to calculate routes.
+
+Map
+Satellite
+Keyboard shortcuts
+Map data ©2026 Google, INEGI
+Terms
+Plan Builder
+1/6
+What are you planning for?
+
+Choose a category, then select or describe your emergency.
+
+🌪️
+Natural Disasters
+
+Weather and geological events
+
+🏠
+Home Emergencies
+
+Issues within your residence
+
+🚗
+Travel & Transit
+
+Problems while away from home
+
+Continue

@@ -1,0 +1,315 @@
+ReadyPlan
+Dashboard
+Plans
+Sheets
+Groups
+Templates
+Assistant
+Route Builder
+Locations
+Audit
+Knowledge Check
+Achievements
+References
+Profile
+Help & Support
+Sign Out
+Dashboard
+Templates
+Groups
+Assistant
+1
+B
+Back to plans
+Print Results
+Audit Another Plan
+0
+/ 100
+
+TEST - HazırPlan Research
+
+Not ready
+
+You have a plan started. Most of the work is still ahead.
+
+Scored 10/18/2026, 5:31:50 PM - rubric consumer-household-readiness v1.2.0
+
+Category Breakdown
+Communications
+
+Weight: 30%
+
+0
+
+0 of 5 checks passed
+
+Evacuation
+
+Weight: 20%
+
+0
+
+0 of 4 checks passed
+
+Shelter in place
+
+Weight: 15%
+
+0
+
+0 of 4 checks passed
+
+Documents and finances
+
+Weight: 15%
+
+0
+
+0 of 3 checks passed
+
+Kids, pets, and people who depend on you
+
+Weight: 10%
+
+0
+
+0 of 1 checks passed
+
+Sharing and accessibility
+
+Weight: 10%
+
+0
+
+0 of 3 checks passed
+
+Detailed Checks
+Communications
+0 / 5
+0
+Pace Defined
+Not captured
+confidence 98%
+
+The plan contains only a single step about shutting off utilities and a self-assessment section. There is no mention of a PACE plan or any communication methods (Primary, Alternate, Contingency, or Emergency) for household members to reach each other. This content is entirely absent from the plan.
+
+Next step: Pick a backup that does not depend on cell towers. Family radio, satellite messenger, or an agreed-on physical meeting place all work. Write it down where everyone can see it.
+
+Out Of Area Contact
+Fail
+confidence 99%
+
+“Out-of-area emergency contact: No”
+
+The plan explicitly states "Out-of-area emergency contact: No," meaning the household has directly addressed this check and confirmed that no out-of-area contact has been designated. This is a clear failure of a critical criterion, especially given the household's isolated location which makes an out-of-area relay even more important.
+
+Next step: Pick one person, far from you, who knows they are the relay. Tell them. Make sure every household member has their number written down somewhere that is not a phone.
+
+Contact Info Offline
+Fail
+confidence 97%
+
+“Offline access: No, the plan is only available digitally within the app”
+
+The plan explicitly states that it is only available digitally within the app, meaning critical contact information is not accessible offline. Additionally, there is no out-of-area emergency contact established at all, compounding the failure. Both conditions required by the success criterion are unmet.
+
+Next step: Print the contact list. Put a copy in each go-bag, one on the fridge, and one in each vehicle.
+
+Meeting Locations
+Not captured
+confidence 100%
+
+The plan contains only a single step about shutting off utilities and a preparedness self-assessment section. There is no mention of any meeting or rendezvous locations — neither near the home nor outside the immediate area — anywhere in the plan text.
+
+Next step: Pick two real places. One within walking distance of home, one a few miles away in a direction you would actually travel. Use addresses or named landmarks.
+
+Communications Tested
+Fail
+confidence 99%
+
+“Plan drills: No drills have been conducted”
+
+The plan explicitly states that no drills have been conducted, which directly contradicts the success criterion requiring confirmation that communication drills have been conducted. This is a clear failure, not an absence of coverage — the plan addresses the topic and confirms the negative.
+
+Next step: Pick a Saturday. Run the comms portion of your plan end to end. You will find something broken. Fix it.
+
+Evacuation
+0 / 4
+0
+Evac Destinations
+Not captured
+confidence 100%
+
+The plan contains only a single step about shutting off utilities and a preparedness self-assessment section. There are no evacuation destinations named anywhere in the plan — not one, let alone two in different directions.
+
+Next step: Pick a friend or family member to the north and another to the south or east. Call them. Confirm they would take you in. Write down both addresses.
+
+Evac Routes
+Not captured
+confidence 99%
+
+The plan contains only a single step about shutting off utilities and a preparedness self-assessment section. There is no mention of any destinations, routes, primary or alternate paths, or chokepoints anywhere in the plan.
+
+Next step: Drive the routes once. Note the gas stations, the chokepoints, and whether they go over any bridges you would not want to be on in a disaster.
+
+Evac Triggers
+Not captured
+confidence 99%
+
+The plan contains only a single step about shutting off utilities if leaks are detected. There are no evacuation triggers defined anywhere in the plan — not even vague ones. The concept of evacuation versus sheltering in place is entirely absent.
+
+Next step: The decision to leave is the hardest one to make in the moment. Write down two or three conditions where you leave without debating it.
+
+Go Bag Ready
+Not captured
+confidence 98%
+
+The plan contains no mention of a go-bag, emergency kit, or any equivalent packed supplies. There is no reference to accessible emergency items or a date when such items were last checked. This topic is entirely absent from the plan.
+
+Next step: Check the bag this weekend. Things expire. Kids grow. Medications change. The bag you packed two years ago is not the bag you need today.
+
+Shelter in place
+0 / 4
+0
+Water Supply
+Not captured
+confidence 99%
+
+The plan contains only a single step about shutting off utilities and a preparedness self-assessment section. There is no mention of water storage, a 72-hour water supply, gallons per person, or any method to extend water supply (filtration, alternative sources, etc.). This check is entirely absent from the plan.
+
+Next step: One gallon per person per day. Three days minimum. Store it. Then figure out where you would get more.
+
+Food Supply
+Not captured
+confidence 99%
+
+The plan contains only a single step about shutting off utilities and a preparedness self-assessment section. There is no mention of food storage, shelf-stable food, 72-hour supply, or dietary considerations anywhere in the plan text.
+
+Next step: Three days of food per person. Stuff you would actually eat. Rotate it.
+
+Power Backup
+Not captured
+confidence 97%
+
+The plan contains only a single step about shutting off utilities if leaks are detected, with no mention of flashlights, alternative lighting, device charging methods, warmth, or any other power-outage contingency. The topic of grid power failure is entirely absent from the plan.
+
+Next step: Headlamps for every member. A way to charge phones without the grid. If you live somewhere it gets cold, a way to stay warm without forced-air heat.
+
+Medical Continuity
+Not captured
+confidence 70%
+
+The plan contains no mention of medical conditions, prescription medications, or medical equipment for any household member. There is no content addressing medical continuity whatsoever. Since the plan does not indicate the household has no medical needs (which would make this not_applicable), and simply omits the topic entirely, this is not_captured.
+
+Next step: For everyone on a daily medication, talk to your doctor about a 7-day buffer. Write down the prescription, the pharmacy, and the doctor's after-hours number.
+
+Documents and finances
+0 / 3
+0
+Vital Documents
+Not captured
+confidence 99%
+
+The plan contains only a single step about shutting off utilities and a preparedness self-assessment section. There is no mention of vital documents (IDs, passports, insurance, deeds, medical records, etc.) or any storage locations for such documents. This check is entirely absent from the plan.
+
+Next step: Make scans. Put them somewhere you can access from a different device. Put physical copies in your go-bag.
+
+Insurance Inventory
+Not captured
+confidence 98%
+
+The plan contains no mention of a home inventory, photo walkthrough, video documentation, or any list of household belongings. This check is entirely absent from the plan text.
+
+Next step: Walk through your house with your phone camera. Open every drawer and closet. Save it to the cloud. Takes 15 minutes. Worth $10,000 if you ever file a claim.
+
+Emergency Cash
+Not captured
+confidence 99%
+
+The plan contains only a single step about shutting off utilities and a preparedness self-assessment section. There is no mention of emergency cash, physical currency, or any financial preparedness measures anywhere in the plan.
+
+Next step: A few hundred dollars in small bills, kept somewhere you would not raid for pizza money. ATMs go down. Card readers go down. Cash works.
+
+Kids, pets, and people who depend on you
+0 / 1
+0
+Children Plan
+Not captured
+confidence 99%
+
+“Household: 4 people, children present”
+
+The plan acknowledges children are present in the household but contains absolutely no information about school/care locations, pickup authority, custody coordination, child-specific supplies, or any communications plan involving the children. The only plan step is about shutting off utilities. This is a critical gap.
+
+Next step: School pickup card on file with the school. Talk to your kids about the rendezvous. Make sure they know the out-of-area contact's name.
+
+Elder Dependent Plan
+Not applicable
+confidence 60%
+
+“Household: 4 people, children present”
+
+The plan notes children are present but makes no mention of elderly parents, dependents with disabilities, or other dependent adults. There is no indication the household includes any dependent adults requiring special assistance. Since the rubric explicitly allows not_applicable for households with none, and the plan only references children (covered by a separate check), this check is not applicable — though confidence is moderate because the plan is sparse and doesn't explicitly confirm the absence of dependent adults.
+
+Pets Plan
+Not applicable
+confidence 60%
+
+The plan does not mention any pets, and the check explicitly states that households with no pets are not_applicable. Since there is no indication in the plan that the household has pets, this check does not apply. Confidence is moderate because the plan is minimal and pets are simply not mentioned rather than explicitly excluded.
+
+Sharing and accessibility
+0 / 3
+0
+Plan Shared
+Fail
+confidence 99%
+
+“Shared with household: No, the plan has not been shared with other household members”
+
+The plan explicitly states it has not been shared with any other household members. With 4 people in the household including children, this is a critical failure — no other adult in the household has access to or awareness of the plan.
+
+Next step: The person who built the plan is statistically the person least likely to be home when it matters. Share it.
+
+Plan Accessible Offline
+Fail
+confidence 99%
+
+“Offline access: No, the plan is only available digitally within the app”
+
+The plan explicitly states that it is only available digitally within the app and has no offline access. Neither offline app caching nor a printed copy is referenced, directly contradicting the success criterion.
+
+Next step: Print the plan, or confirm offline access on every household member's device. The internet is the first thing to go.
+
+Trusted Third Party
+Fail
+confidence 99%
+
+“Trusted third party: No external person knows about this plan”
+
+The plan explicitly states that no external person knows about the plan, directly contradicting the success criterion. This is not a case of missing content — the plan addresses the check and confirms it is not met.
+
+Next step: Tell one person outside your house — the out-of-area contact is a natural choice. They do not need a copy. They just need to know it exists.
+
+Audit Another Plan
+Plan Builder
+1/6
+What are you planning for?
+
+Choose a category, then select or describe your emergency.
+
+🌪️
+Natural Disasters
+
+Weather and geological events
+
+🏠
+Home Emergencies
+
+Issues within your residence
+
+🚗
+Travel & Transit
+
+Problems while away from home
+
+Continue

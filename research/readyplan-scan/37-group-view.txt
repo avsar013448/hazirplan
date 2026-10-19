@@ -1,0 +1,55 @@
+ReadyPlan
+Dashboard
+Plans
+Sheets
+Groups
+Templates
+Assistant
+Route Builder
+Locations
+Audit
+Knowledge Check
+Achievements
+References
+Profile
+Help & Support
+Sign Out
+Dashboard
+Templates
+Groups
+Assistant
+1
+B
+TEST - HazırPlan Research
+Delete Group
+Plans (0)
+Sheets (0)
+Locations (0)
+Members (1)
+Add Plans from My Collection
+No Plans Yet
+
+Add plans from your personal collection to share with the group
+
+Plan Builder
+1/6
+What are you planning for?
+
+Choose a category, then select or describe your emergency.
+
+🌪️
+Natural Disasters
+
+Weather and geological events
+
+🏠
+Home Emergencies
+
+Issues within your residence
+
+🚗
+Travel & Transit
+
+Problems while away from home
+
+Continue

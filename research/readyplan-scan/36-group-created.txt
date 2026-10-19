@@ -1,0 +1,65 @@
+ReadyPlan
+Dashboard
+Plans
+Sheets
+Groups
+Templates
+Assistant
+Route Builder
+Locations
+Audit
+Knowledge Check
+Achievements
+References
+Profile
+Help & Support
+Sign Out
+Dashboard
+Templates
+Groups
+Assistant
+1
+B
+TEST - HazırPlan Research
+1 members
+0 sheets
+Plan Builder
+1/6
+What are you planning for?
+
+Choose a category, then select or describe your emergency.
+
+🌪️
+Natural Disasters
+
+Weather and geological events
+
+🏠
+Home Emergencies
+
+Issues within your residence
+
+🚗
+Travel & Transit
+
+Problems while away from home
+
+Continue
+Create New Group
+
+Collaborate on emergency preparedness together
+
+Group Name *
+Description(Optional)
+
+Private Group
+
+Only invited members can see and join this group
+
+What you can do with groups
+
+• Share emergency plans and checklists
+• Collaborate on preparedness strategies
+• Keep everyone on the same page
+Cancel
+Create Group

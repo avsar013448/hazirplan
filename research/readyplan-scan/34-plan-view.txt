@@ -1,0 +1,69 @@
+ReadyPlan
+Dashboard
+Plans
+Sheets
+Groups
+Templates
+Assistant
+Route Builder
+Locations
+Audit
+Knowledge Check
+Achievements
+References
+Profile
+Help & Support
+Sign Out
+Dashboard
+Templates
+Groups
+Assistant
+1
+B
+Pin
+View
+Edit
+TEST - HazırPlan Research
+Reset Plan
+Download
+Steps
+1
+Check gas and electricity
+
+Shut off utilities if leaks are detected
+
+Mark Complete
+PACE Plan
+
+No PACE plan linked.
+
+EXFIL Plan
+
+No EXFIL plan linked.
+
+Notes
+
+No additional notes.
+
+Plan Builder
+1/6
+What are you planning for?
+
+Choose a category, then select or describe your emergency.
+
+🌪️
+Natural Disasters
+
+Weather and geological events
+
+🏠
+Home Emergencies
+
+Issues within your residence
+
+🚗
+Travel & Transit
+
+Problems while away from home
+
+Continue

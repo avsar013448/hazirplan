@@ -1,0 +1,312 @@
+ReadyPlan
+Dashboard
+Plans
+Sheets
+Groups
+Templates
+Assistant
+Route Builder
+Locations
+Audit
+Knowledge Check
+Achievements
+References
+Profile
+Help & Support
+Upgrade to Premium
+Sign Out
+Dashboard
+Templates
+Groups
+Assistant
+1
+B
+Achievements
+
+Track your progress and unlock rewards
+
+Level 1
+
+•
+
+Planner Initiate
+
+10 points earned
+
+Progress to Level 2
+30 points to go
+Achievements
+How to Earn
+All (31)
+Completed (1)
+In Progress (0)
+Boots on the Ground
+
+Logged into the app for the first time
+
+Completed on 10/17/2026
+
++10
+PTS
+Authentication Master
+
+Achieved 80% or higher on the Authentication Table knowledge check
+
+0/1 completed
+
++20
+PTS
+Calculated Response
+
+Completed over 80% of the fields on a single Condition/Plan sheet
+
+0/1 completed
+
++15
+PTS
+Card Champion
+
+Achieved 80% or higher on the Card of the Day knowledge check
+
+0/1 completed
+
++20
+PTS
+Challenge Accepted
+
+Set up your first Authentication Table sheet
+
+0/1 completed
+
++10
+PTS
+Cipher Expert
+
+Achieved 80% or higher on the Cipher knowledge check
+
+0/1 completed
+
++20
+PTS
+Code Word Crafter
+
+Set up your first Card of the Day sheet
+
+0/1 completed
+
++10
+PTS
+Comms Coordinator
+
+Created 3 or more distinct PACE Plan sheets
+
+0/3 completed
+
++25
+PTS
+Drill Responder
+
+Click on a drill notification and open the app
+
+0/1 completed
+
++50
+PTS
+EXFIL Expert
+
+Achieved 80% or higher on the EXFIL Plan knowledge check
+
+0/1 completed
+
++20
+PTS
+First Scenario
+
+Created your first Condition/Plan sheet
+
+0/1 completed
+
++10
+PTS
+Full Spectrum Comms
+
+Defined methods for Primary, Alternate, Contingency, AND Emergency on a single PACE Plan sheet
+
+0/1 completed
+
++20
+PTS
+Go-Bag Guru
+
+Achieved 80% or higher on the Go-Bag Checklist knowledge check
+
+0/1 completed
+
++20
+PTS
+Go-Bag Secured
+
+Completed 100% of a Go-Bag Checklist
+
+0/1 completed
+
++20
+PTS
+Grab and Go
+
+Created your first Go-Bag Packing Checklist
+
+0/1 completed
+
++10
+PTS
+Group Member
+
+Join your first group for collaborative planning
+
+0/1 completed
+
++50
+PTS
+Inventory Ace
+
+Achieved 80% or higher on the Inventory List knowledge check
+
+0/1 completed
+
++20
+PTS
+List Builder
+
+Created your first custom checklist using the Checklist Maker tool
+
+0/1 completed
+
++15
+PTS
+Notes Expert
+
+Achieved 80% or higher on the Notes & Checklists knowledge check
+
+0/1 completed
+
++20
+PTS
+One Time Pad Expert
+
+Achieved 80% or higher on the One Time Pad knowledge check
+
+0/1 completed
+
++20
+PTS
+PACE Professional
+
+Achieved 80% or higher on the PACE Plan knowledge check
+
+0/1 completed
+
++20
+PTS
+Planning Master
+
+Achieved 80% or higher on the Planning Principles knowledge check
+
+0/1 completed
+
++20
+PTS
+Ride is Right
+
+Completed 100% of a Vehicle Checklist
+
+0/1 completed
+
++20
+PTS
+Road Warrior Ready
+
+Created your first Vehicle Checklist
+
+0/1 completed
+
++10
+PTS
+Route Planner
+
+Created your first EXFIL Plan sheet
+
+0/1 completed
+
++10
+PTS
+Serious Planner
+
+Create 3 or more distinct Contingency Plans
+
+0/3 completed
+
++25
+PTS
+Signal Starter
+
+Created your first PACE Plan sheet
+
+0/1 completed
+
++10
+PTS
+Taking Stock
+
+Created your first Inventory List sheet
+
+0/1 completed
+
++10
+PTS
+Template Collector
+
+Download templates to jumpstart your planning
+
+0/1 completed
+
++25
+PTS
+Unbreakable Link
+
+Set up your first One Time Pad sheet
+
+0/1 completed
+
++15
+PTS
+Vehicle Virtuoso
+
+Achieved 80% or higher on the Vehicle Checklist knowledge check
+
+0/1 completed
+
++20
+PTS
+Plan Builder
+1/6
+What are you planning for?
+
+Choose a category, then select or describe your emergency.
+
+🌪️
+Natural Disasters
+
+Weather and geological events
+
+🏠
+Home Emergencies
+
+Issues within your residence
+
+🚗
+Travel & Transit
+
+Problems while away from home
+
+Continue

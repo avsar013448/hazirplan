@@ -1,0 +1,127 @@
+ReadyPlan
+Dashboard
+Plans
+Sheets
+Groups
+Templates
+Assistant
+Route Builder
+Locations
+Audit
+Knowledge Check
+Achievements
+References
+Profile
+Help & Support
+Sign Out
+Dashboard
+Templates
+Groups
+Assistant
+1
+B
+Back to plans
+Print Results
+Audit Another Plan
+0
+/ 100
+
+TEST - HazırPlan Research
+
+Not ready
+
+You have a plan started. Most of the work is still ahead.
+
+Scored 10/18/2026, 5:31:50 PM - rubric consumer-household-readiness v1.2.0
+
+Category Breakdown
+Communications
+
+Weight: 30%
+
+0
+
+0 of 5 checks passed
+
+Evacuation
+
+Weight: 20%
+
+0
+
+0 of 4 checks passed
+
+Shelter in place
+
+Weight: 15%
+
+0
+
+0 of 4 checks passed
+
+Documents and finances
+
+Weight: 15%
+
+0
+
+0 of 3 checks passed
+
+Kids, pets, and people who depend on you
+
+Weight: 10%
+
+0
+
+0 of 1 checks passed
+
+Sharing and accessibility
+
+Weight: 10%
+
+0
+
+0 of 3 checks passed
+
+Detailed Checks
+Communications
+0 / 5
+0
+Evacuation
+0 / 4
+0
+Shelter in place
+0 / 4
+0
+Documents and finances
+0 / 3
+0
+Kids, pets, and people who depend on you
+0 / 1
+0
+Sharing and accessibility
+0 / 3
+0
+Audit Another Plan
+Plan Builder
+1/6
+What are you planning for?
+
+Choose a category, then select or describe your emergency.
+
+🌪️
+Natural Disasters
+
+Weather and geological events
+
+🏠
+Home Emergencies
+
+Issues within your residence
+
+🚗
+Travel & Transit
+
+Problems while away from home
+
+Continue
