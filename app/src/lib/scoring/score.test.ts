@@ -5,7 +5,7 @@ import type { Plan, Settings, Sheet, DrillEntry, FamilyLocation } from '../types
 const emptySettings: Settings = {
   id: 'app', aileKodu: null, aileKoduSharedWith: 0,
   printedCopy: false, exportedCopy: false, outsidePersonAware: false,
-  safeRoom: '', hasVehicle: null,
+  safeRoom: '', hasVehicle: null, updatedAt: 0,
 };
 
 const emptyPlan: Plan = {
@@ -41,7 +41,7 @@ describe('scorePlan — Hazırlık Skoru', () => {
       { type: 'envanter', id: 's3', title: 'Envanter', items: Array.from({ length: 9 }, (_, i) => ({ name: `Eşya ${i}`, qty: 1, done: true })), waterLiters: 18, updatedAt: 0 },
       { type: 'acil_kisiler', id: 's4', title: 'Acil Kişiler', contacts: [], documents: { kimlikler: true, sigorta: true, nakit: true, kopyaYeri: 'USB' }, updatedAt: 0 },
     ];
-    const drills: DrillEntry[] = [{ planId: 'p1', date: '2026-10-01', kind: 'comms' }];
+    const drills: DrillEntry[] = [{ id: 'd1', planId: 'p1', date: '2026-10-01', kind: 'comms' }];
     const settings: Settings = {
       ...emptySettings, aileKodu: 'KOD1234', aileKoduSharedWith: 3,
       printedCopy: true, outsidePersonAware: true, safeRoom: 'Banyo', hasVehicle: true,
@@ -95,7 +95,7 @@ describe('scorePlan — Hazırlık Skoru', () => {
       { type: 'iletisim', id: 's1', title: 'İletişim', primary: 'Telefon', alternate: 'SMS', contingency: 'WhatsApp', emergency: 'Buluşma noktası', outOfAreaContact: { name: 'Teyze', phone: '0533...' }, updatedAt: 0 },
       { type: 'tahliye', id: 's2', title: 'Tahliye', destinations: [{ name: 'Kuzey', direction: 'north' }, { name: 'Güney', direction: 'south' }], routeSteps: [{ from: 'Ev', to: 'Okul' }], hasAlternateRoute: true, updatedAt: 0 },
     ];
-    const drills: DrillEntry[] = [{ planId: 'p1', date: '2026-10-01', kind: 'comms' }];
+    const drills: DrillEntry[] = [{ id: 'd1', planId: 'p1', date: '2026-10-01', kind: 'comms' }];
     const locations: FamilyLocation[] = [
       { id: 'l1', name: 'Okul bahçesi', type: 'rally', lat: 0, lng: 0 },
       { id: 'l2', name: 'Stadyum', type: 'rally', lat: 0, lng: 0 },
@@ -104,5 +104,57 @@ describe('scorePlan — Hazırlık Skoru', () => {
     expect(r.pct).toBeGreaterThan(40);
     expect(r.pct).toBeLessThan(70);
     expect(r.level).toBe('Yoldasınız');
+  });
+
+  it('attributes drills per-plan: another plan\'s drill does not pass this plan', () => {
+    const drills: DrillEntry[] = [{ id: 'dx', planId: 'OTHER-PLAN', date: '2026-10-01', kind: 'comms' }];
+    const r = scorePlan(emptyPlan, [], drills, emptySettings, []);
+    const byId = (id: string) => r.categories.flatMap((c) => c.checks).find((c) => c.id === id)!;
+    expect(byId('iletisim_tatbikat').status).toBe('basarisiz');
+  });
+
+  it('matches Turkish İ correctly (İlaçlar counts as meds)', () => {
+    const plan: Plan = { ...emptyPlan, circumstances: ['critical_meds'] };
+    const sheets: Sheet[] = [
+      { type: 'envanter', id: 'e1', title: 'Envanter', items: [{ name: 'İlaçlar', qty: 2, done: true }], waterLiters: 0, updatedAt: 0 },
+    ];
+    const r = scorePlan(plan, sheets, [], emptySettings, []);
+    const byId = (id: string) => r.categories.flatMap((c) => c.checks).find((c) => c.id === id)!;
+    expect(byId('medikal_ihtiyac').status).toBe('pass');
+  });
+
+  it('envanter_doluluk requires 8 DONE items (qty alone is not enough)', () => {
+    const sheets: Sheet[] = [
+      { type: 'envanter', id: 'e2', title: 'Envanter',
+        items: Array.from({ length: 10 }, (_, i) => ({ name: `Item ${i}`, qty: 5, done: false })),
+        waterLiters: 0, updatedAt: 0 },
+    ];
+    const r = scorePlan(emptyPlan, sheets, [], emptySettings, []);
+    const byId = (id: string) => r.categories.flatMap((c) => c.checks).find((c) => c.id === id)!;
+    expect(byId('envanter_doluluk').status).toBe('basarisiz');
+  });
+
+  it('dependent household passes ozel_ihtiyac via injected step title', () => {
+    const plan: Plan = {
+      ...emptyPlan,
+      household: { size: 3, home: 'apartment', members: [{ name: 'Kai', role: 'çocuk' }] },
+      steps: [{ order: 1, title: 'Kim, kime yardım ediyor?', checklistItems: [], sheetRefs: [], done: false }],
+    };
+    const r = scorePlan(plan, [], [], emptySettings, [], ['Kim, kime yardım ediyor?']);
+    const byId = (id: string) => r.categories.flatMap((c) => c.checks).find((c) => c.id === id)!;
+    expect(byId('ozel_ihtiyac_plani').status).toBe('pass');
+  });
+
+  it('scores the FIRST sheet of a type in plan.sheetIds order', () => {
+    const full: Sheet = { type: 'iletisim', id: 'A', title: 'Dolu', primary: 'p', alternate: 'a', contingency: 'c', emergency: 'e', outOfAreaContact: null, updatedAt: 0 };
+    const empty: Sheet = { type: 'iletisim', id: 'B', title: 'Boş', primary: '', alternate: '', contingency: '', emergency: '', outOfAreaContact: null, updatedAt: 0 };
+    // plan links B first — B is the one that counts
+    const planB: Plan = { ...emptyPlan, sheetIds: ['B', 'A'] };
+    const rB = scorePlan(planB, [full, empty], [], emptySettings, []);
+    const byId = (r: ReturnType<typeof scorePlan>) => r.categories.flatMap((c) => c.checks).find((c) => c.id === 'pace_dolu')!;
+    expect(byId(rB).status).toBe('basarisiz');
+    const planA: Plan = { ...emptyPlan, sheetIds: ['A', 'B'] };
+    const rA = scorePlan(planA, [full, empty], [], emptySettings, []);
+    expect(byId(rA).status).toBe('pass');
   });
 });

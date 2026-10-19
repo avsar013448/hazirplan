@@ -7,6 +7,7 @@ import type {
 export interface WizardAnswers {
   hazard: Hazard;
   extraText?: string;          // step 5 free text (0/500)
+  otherTitle?: string;         // 'Diğer' tehlike için plan adı (0/50)
   householdSize: number;
   home: 'apartment' | 'house';
   members: { id: string; label: string }[];        // step 3 selections
@@ -24,6 +25,7 @@ export interface ContentPack {
   }>;
   sheetSkeletons: Record<string, Record<string, unknown>>;
   circumstanceSteps: Record<string, { afterSheet: string; title: string; objective: string }>;
+  dependentStep?: { title: string; objective: string };
 }
 
 export interface AssembleOptions {
@@ -79,9 +81,18 @@ export function assemblePlan(answers: WizardAnswers, pack: ContentPack, opts: As
           contacts: skel.contacts.map((c) => ({ ...c })), updatedAt: opts.now };
         return sheet;
       }
-      default: {
-        const sheet: Sheet = { type: 'kontrol_listesi', id, title: type, items: [], updatedAt: opts.now };
+      case 'envanter': {
+        const sheet: Sheet = { type: 'envanter', id, title: 'Envanter', items: [], waterLiters: 0, updatedAt: opts.now };
         return sheet;
+      }
+      case 'kontrol_listesi': {
+        const sheet: Sheet = { type: 'kontrol_listesi', id, title: 'Kontrol Listesi', items: [], updatedAt: opts.now };
+        return sheet;
+      }
+      default: {
+        // Bilinmeyen tip = content pack hatası. Sessizce yanlış sheet üretmek
+        // yerine bağıra bağıra patla (code-review-1 P2 fix).
+        throw new Error(`Bilinmeyen sheet tipi: "${type}" — content pack ile kod uyuşmuyor`);
       }
     }
   };
@@ -91,11 +102,15 @@ export function assemblePlan(answers: WizardAnswers, pack: ContentPack, opts: As
     : memberId === 'special_needs' ? 'engelli' : 'yetişkin';
 
   const steps: PlanStep[] = [];
+  // Aynı koşul, birden fazla anchor adımına bağlanmışsa her seferinde yeniden
+  // enjekte edilmesin (code-review-1 P2 fix)
+  const injectedCircumstances = new Set<string>();
   const addCircumstanceStepsAfter = (sheetType: string) => {
     for (const c of answers.circumstances) {
       const inj = pack.circumstanceSteps[c.id];
-      if (inj && inj.afterSheet === sheetType) {
+      if (inj && inj.afterSheet === sheetType && !injectedCircumstances.has(c.id)) {
         steps.push(mkStep({ title: inj.title, objective: inj.objective }, []));
+        injectedCircumstances.add(c.id);
       }
     }
   };
@@ -111,19 +126,37 @@ export function assemblePlan(answers: WizardAnswers, pack: ContentPack, opts: As
     // circumstance steps attach right AFTER the step that owns their anchor sheet
     for (const type of s.sheets) addCircumstanceStepsAfter(type);
   }
+  // Bağımlı hane üyesi (çocuk/yaşlı/özel bakım) varsa "kim, kime yardım ediyor?"
+  // adımı enjekte edilir — Hazırlık Skoru'nun ozel_ihtiyac_plani kontrolü tam bu
+  // adımı arar; böylece kontrol UI'sız producer veriyle geçilebilir (review P1 fix).
+  if (pack.dependentStep && answers.members.some((m) => ['children', 'elderly', 'special_needs'].includes(m.id))) {
+    steps.push(mkStep({ title: pack.dependentStep.title, objective: pack.dependentStep.objective }, []));
+  }
   steps.forEach((s, i) => (s.order = i + 1));
 
-  const members: HouseholdMember[] = answers.members.map((m) => ({
+  // Evcil hayvan İNSAN üyesi değil: 'pets' seçimi circumstances'a gider,
+  // members listesine değil (code-review-1 P2 fix).
+  const humanMemberAnswers = answers.members.filter((m) => m.id !== 'pets');
+  const hasPets = answers.members.some((m) => m.id === 'pets');
+  const members: HouseholdMember[] = humanMemberAnswers.map((m) => ({
     name: m.label, role: roleFor(m.id) ?? 'yetişkin',
   }));
+  const circumstances = answers.circumstances.map((c) => c.id);
+  if (hasPets && !circumstances.includes('pets')) circumstances.push('pets');
+
+  // Hane tutarlılığı: üye sayısı > seçilen kişi sayısı ise üye sayısını kullan
+  // (skor requiredWater ve bağımlı tespiti buna dayanır — code-review-1 P2 fix).
+  const householdSize = Math.max(answers.householdSize, members.length);
 
   const plan: Plan = {
     id: planId,
     locale: pack.locale === 'tr' ? 'tr' : 'es-PE',
     hazard: answers.hazard,
-    title: template.title,
-    household: { size: answers.householdSize, home: answers.home, members },
-    circumstances: answers.circumstances.map((c) => c.id),
+    title: (answers.hazard === 'other' && answers.otherTitle?.trim())
+      ? answers.otherTitle.trim().slice(0, 50)
+      : template.title,
+    household: { size: householdSize, home: answers.home, members },
+    circumstances,
     steps,
     sheetIds: sheets.map((s) => s.id),
     notes: answers.extraText ?? '',

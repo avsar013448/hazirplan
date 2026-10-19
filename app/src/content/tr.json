@@ -30,7 +30,7 @@
     "deprem_cantasi": {
       "title": "Deprem Çantası",
       "items": [
-        { "name": "Su (kişi başı 3 gün × 2L)", "qty": 1 },
+        { "name": "Su — içme suyu (kişi başı 3 gün × 2L)", "qty": 1 },
         { "name": "Uzun ömürlü gıda (konserve/enerji barı)", "qty": 1 },
         { "name": "İlk yardım seti", "qty": 1 },
         { "name": "El feneri + yedek pil", "qty": 1 },
@@ -189,6 +189,10 @@
     "no_vehicle": { "afterSheet": "tahliye", "title": "Toplu taşıma / yürüyüş planı", "objective": "Araç yoksa: otobüs/metro güzergâhı veya yürüyüş rotası ve buluşma noktası." },
     "mobility": { "afterSheet": "tahliye", "title": "Kim, kime yardım ediyor?", "objective": "Hareket kısıtlılığı olan kişi için sorumlu kişi ve taşım/destek planı yazın." },
     "pets": { "afterSheet": "deprem_cantasi", "title": "Evcil hayvan planı", "objective": "Taşıma kafesi, mama ve suyu çantaya ekleyin; hayvanla kabul eden toplanma noktası belirleyin." }
+  },
+  "dependentStep": {
+    "title": "Kim, kime yardım ediyor?",
+    "objective": "Çocuk/yaşlı/özel bakım ihtiyacı olan aile fertleri için sorumlu kişi ve yardım planı."
   },
   "wizardCopy": {
     "step1Title": "Neye karşı planlıyorsunuz?",

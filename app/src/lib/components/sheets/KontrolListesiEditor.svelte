@@ -5,12 +5,18 @@
 
   let { sheet }: { sheet: KontrolListesiSheet } = $props();
   let s = $state(sheet);
-  let savedAt = $state(0);
+  let saveState = $state<'idle' | 'saved' | 'error'>('idle');
   let newText = $state('');
 
+  // Hata durumunda 'Kaydedilemedi' görünür — sessiz veri kaybı yok (review P1 fix).
   async function persist() {
-    await saveSheet(s);
-    savedAt = Date.now();
+    try {
+      await saveSheet(s);
+      saveState = 'saved';
+    } catch (e) {
+      console.error('Sheet kaydedilemedi:', e);
+      saveState = 'error';
+    }
   }
 
   function toggleDone(i: number) {
@@ -51,7 +57,7 @@
     <input type="text" placeholder="Yeni madde" bind:value={newText} />
     <button class="add" onclick={addItem}>+ Ekle</button>
   </div>
-  {#if savedAt}<span class="saved">Saved</span>{/if}
+  {#if saveState === 'saved'}<span class="saved">Saved</span>{:else if saveState === 'error'}<span class="error" role="alert">⚠ Kaydedilemedi</span>{/if}
 </div>
 
 <style>
@@ -68,4 +74,5 @@
   .add, .ghost { font: inherit; border: 1px solid #e5e7eb; background: #fff; border-radius: 8px; padding: 6px 12px; cursor: pointer; }
   .add { background: #f59e0b; border-color: #f59e0b; font-weight: 600; color: #111; }
   .saved { color: #16a34a; font-size: .8rem; }
+  .error { color: #dc2626; font-size: .8rem; }
 </style>

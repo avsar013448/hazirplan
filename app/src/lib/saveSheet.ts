@@ -9,6 +9,12 @@ export function plainSheet(sheet: Sheet): Sheet {
   return JSON.parse(JSON.stringify(sheet)) as Sheet;
 }
 
-export async function saveSheet(sheet: Sheet): Promise<void> {
-  await db.sheets.put(plainSheet(sheet));
+// updatedAt HER yazmada güncellenir: dashboard sıralaması ve gelecek Aile Kodu
+// last-write-wins merge'i bu alana dayanır (code-review-1 P1 fix).
+export async function saveSheet(sheet: Sheet): Promise<Sheet> {
+  const now = Date.now();
+  const plain = plainSheet(sheet);
+  plain.updatedAt = now;
+  await db.sheets.put(plain);
+  return plain;
 }

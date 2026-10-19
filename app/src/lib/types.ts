@@ -116,7 +116,7 @@ export interface FamilyLocation {
   notes?: string;
 }
 
-export interface DrillEntry { planId: string; date: string; kind: 'full' | 'comms' | 'evac' }
+export interface DrillEntry { id: string; planId: string; date: string; kind: 'full' | 'comms' | 'evac' }
 
 export interface Settings {
   id: 'app'; // singleton
@@ -127,4 +127,5 @@ export interface Settings {
   outsidePersonAware: boolean;
   safeRoom: string;          // güvenli oda
   hasVehicle: boolean | null; // null = kullanıcı henüz belirtmedi
+  updatedAt: number;         // Aile Kodu merge için
 }

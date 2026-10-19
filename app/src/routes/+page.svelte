@@ -36,6 +36,9 @@
   }
 
   function handleSaved() {
+    refresh(); // data yenilenir ama modal AÇIK kalır — teyit ekranı görünür (review P1 fix)
+  }
+  function handleClose() {
     wizardOpen = false;
     refresh();
   }
@@ -99,7 +102,7 @@
     <div class="modal-backdrop" role="presentation" onclick={(e) => { if (e.target === e.currentTarget) wizardOpen = false; }}>
       <div class="modal">
         <button class="close" aria-label="Kapat" onclick={() => (wizardOpen = false)}>×</button>
-        <Wizard onsaved={handleSaved} />
+        <Wizard onsaved={handleSaved} onclose={handleClose} />
       </div>
     </div>
   {/if}

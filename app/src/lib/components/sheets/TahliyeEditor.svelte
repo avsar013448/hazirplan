@@ -5,12 +5,18 @@
 
   let { sheet }: { sheet: TahliyeSheet } = $props();
   let s = $state(sheet);
-  let savedAt = $state(0);
+  let saveState = $state<'idle' | 'saved' | 'error'>('idle');
   let newDest = $state('');
 
+  // Hata durumunda 'Kaydedilemedi' görünür — sessiz veri kaybı yok (review P1 fix).
   async function persist() {
-    await saveSheet(s);
-    savedAt = Date.now();
+    try {
+      await saveSheet(s);
+      saveState = 'saved';
+    } catch (e) {
+      console.error('Sheet kaydedilemedi:', e);
+      saveState = 'error';
+    }
   }
 
   function addDest() {
@@ -96,7 +102,7 @@
         value={s.transitPlan} onblur={setTransit}></textarea>
     </label>
   {/if}
-  {#if savedAt}<span class="saved">Saved</span>{/if}
+  {#if saveState === 'saved'}<span class="saved">Saved</span>{:else if saveState === 'error'}<span class="error" role="alert">⚠ Kaydedilemedi</span>{/if}
 </div>
 
 <style>
@@ -112,4 +118,5 @@
   .checkline { display: flex; align-items: center; gap: 8px; font-size: .9rem; }
   .col { display: flex; flex-direction: column; gap: 4px; font-size: .9rem; }
   .saved { color: #16a34a; font-size: .8rem; }
+  .error { color: #dc2626; font-size: .8rem; }
 </style>

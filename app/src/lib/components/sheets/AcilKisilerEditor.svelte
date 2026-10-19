@@ -5,13 +5,19 @@
 
   let { sheet }: { sheet: AcilKisilerSheet } = $props();
   let s = $state(sheet);
-  let savedAt = $state(0);
+  let saveState = $state<'idle' | 'saved' | 'error'>('idle');
   let docs = $state(s.documents ?? { kimlikler: false, sigorta: false, nakit: false, kopyaYeri: '' });
 
+  // Hata durumunda 'Kaydedilemedi' görünür — sessiz veri kaybı yok (review P1 fix).
   async function persist() {
     s.documents = docs;
-    await saveSheet(s);
-    savedAt = Date.now();
+    try {
+      await saveSheet(s);
+      saveState = 'saved';
+    } catch (e) {
+      console.error('Sheet kaydedilemedi:', e);
+      saveState = 'error';
+    }
   }
 
   function setContact(idx: number, key: 'name' | 'phone' | 'relation', e: Event) {
@@ -33,9 +39,9 @@
   <ul>
     {#each s.contacts as c, i (i)}
       <li>
-        <input type="text" value={c.name} placeholder="İsim" oninput={(e) => setContact(i, 'name', e)} onblur={persist} />
-        <input type="tel" value={c.phone} placeholder="Telefon" oninput={(e) => setContact(i, 'phone', e)} onblur={persist} />
-        <input type="text" value={c.relation} placeholder="Yakınlık (komşu, doktor…)" oninput={(e) => setContact(i, 'relation', e)} onblur={persist} />
+        <input type="text" value={c.name} placeholder="İsim" onblur={(e) => setContact(i, 'name', e)} />
+        <input type="tel" value={c.phone} placeholder="Telefon" onblur={(e) => setContact(i, 'phone', e)} />
+        <input type="text" value={c.relation} placeholder="Yakınlık (komşu, doktor…)" onblur={(e) => setContact(i, 'relation', e)} />
         <button class="ghost" onclick={async () => { s.contacts = s.contacts.filter((_, j) => j !== i); await persist(); }}>Sil</button>
       </li>
     {/each}
@@ -63,7 +69,7 @@
         onblur={persist} />
     </label>
   </fieldset>
-  {#if savedAt}<span class="saved">Saved</span>{/if}
+  {#if saveState === 'saved'}<span class="saved">Saved</span>{:else if saveState === 'error'}<span class="error" role="alert">⚠ Kaydedilemedi</span>{/if}
 </div>
 
 <style>
@@ -80,4 +86,5 @@
   .add, .ghost { font: inherit; border: 1px solid #e5e7eb; background: #fff; border-radius: 8px; padding: 6px 12px; cursor: pointer; }
   .add { background: #f59e0b; border-color: #f59e0b; font-weight: 600; color: #111; width: fit-content; }
   .saved { color: #16a34a; font-size: .8rem; }
+  .error { color: #dc2626; font-size: .8rem; }
 </style>

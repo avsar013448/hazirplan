@@ -5,15 +5,17 @@
   import { db } from '../db/db';
   import type { Plan } from '../types';
 
-  let { onsaved = () => {} }: { onsaved?: () => void } = $props();
+  let { onsaved = () => {}, onclose = () => {} }: { onsaved?: () => void; onclose?: () => void } = $props();
 
   const W = pack.wizardCopy;
   const hazards = pack.hazards;
   const membersList = pack.household.members;
   const circumstancesList = pack.household.circumstances;
+  const FREE_PLAN_LIMIT = 3; // specs/mvp-spec.md §8
 
   let step = $state(1);
   let hazard = $state('earthquake');
+  let otherTitle = $state('');
   let extra = $state('');
   let size = $state(2);
   let home = $state<'apartment' | 'house'>('apartment');
@@ -25,6 +27,7 @@
   let saving = $state(false);
   let savedPlan = $state<Plan | null>(null);
   let saveError = $state('');
+  let limitReached = $state(false);
 
   const stepTitle = () => (W as Record<string, string>)['step' + step + 'Title'];
   const hazardLabel = $derived(hazards.find((h) => h.id === hazard)?.label ?? '');
@@ -36,12 +39,14 @@
   function back() { step = Math.max(1, step - 1); }
 
   async function generate() {
+    if (generating) return; // çift-tık koruması (code-review-1 P2 fix)
     generating = true;
     saveError = '';
     const built = assemblePlan(
       {
         hazard: hazard as Plan['hazard'],
         extraText: extra || undefined,
+        otherTitle: hazard === 'other' ? otherTitle : undefined,
         householdSize: size,
         home,
         members: membersList.filter((m) => members.includes(m.id)).map((m) => ({ id: m.id, label: m.label })),
@@ -58,13 +63,21 @@
       revealCount = i;
     }
     generating = false;
+    // Ücretsiz plan limiti: 3 plan (specs §8) — kaydetmeden önce kontrol (review P1 fix)
+    const planCount = await db.plans.count();
+    limitReached = planCount >= FREE_PLAN_LIMIT;
   }
 
   async function save() {
-    if (!result) return;
+    if (!result || saving) return; // re-entrancy koruması (code-review-1 P2 fix)
     saving = true;
     saveError = '';
     try {
+      const planCount = await db.plans.count();
+      if (planCount >= FREE_PLAN_LIMIT) {
+        limitReached = true;
+        return;
+      }
       // $state proxy'leri IndexedDB'ye yazılamaz — snapshot ile düz nesneye çevir
       const plan = $state.snapshot(result.plan);
       const sheets = $state.snapshot(result.sheets);
@@ -73,6 +86,9 @@
         await db.sheets.bulkPut(sheets);
       });
       savedPlan = plan;
+      // NOT: modal burada KAPANMAZ — görünür teyit ekranı gösterilir;
+      // "Tamam" onclose() çağırır (code-review-1 P1 fix: teyit gerçek uygulamada
+      // hiç görünmüyordu çünkü dashboard onsaved ile modalı hemen kapatıyordu).
       onsaved();
     } catch (e) {
       saveError = 'Kayıt başarısız oldu. Tekrar deneyin. (' + (e as Error).message + ')';
@@ -84,12 +100,21 @@
 
 <div class="wizard" role="dialog" aria-label="Plan Sihirbazı">
   {#if savedPlan}
-    <!-- Visible save confirmation — ReadyPlan'ın kaçırdığı kritik an -->
+    <!-- Görünür kayıt teyidi — ReadyPlan'ın kaçırdığı kritik an.
+         Modal KAPANMAZ; "Tamam" kapatır (code-review-1 P1 fix). -->
     <div class="saved">
       <div class="saved-icon">✅</div>
       <h2>Plan kaydedildi: {savedPlan.title}</h2>
       <p>{savedPlan.steps.length} adım ve {savedPlan.sheetIds.length} sayfa, Planlarım listesinde.</p>
-      <button class="btn primary" onclick={() => onsaved()}>Tamam</button>
+      <button class="btn primary" onclick={() => onclose()}>Tamam</button>
+    </div>
+  {:else if result && limitReached}
+    <div class="saved">
+      <div class="saved-icon">⚠️</div>
+      <h2>Plan limiti doldu</h2>
+      <p>Ücretsiz planda en fazla {FREE_PLAN_LIMIT} plan bulunur. Var olan bir planı silin veya planlarınızdan birini güncelleyin.</p>
+      <button class="btn ghost" onclick={() => (result = null)}>Geri Dön</button>
+      <button class="btn primary" onclick={() => onclose()}>Kapat</button>
     </div>
   {:else if result}
     <header>
@@ -134,6 +159,12 @@
           </button>
         {/each}
       </div>
+      {#if hazard === 'other'}
+        <label class="othertitle">
+          Planınızın adı ne olsun?
+          <input type="text" bind:value={otherTitle} maxlength="50" placeholder="ör: Mahalle yangın planı" />
+        </label>
+      {/if}
     {:else if step === 2}
       <div class="row">
         <label>
@@ -219,6 +250,8 @@
   .btn.primary { background: #f59e0b; color: #111; font-weight: 600; }
   .btn.primary:disabled { opacity: .6; cursor: wait; }
   .btn.ghost { background: transparent; border: 1px solid #e5e7eb; }
+  .othertitle { display: flex; flex-direction: column; gap: 4px; margin-top: 10px; font-size: .9rem; }
+  .othertitle input { font: inherit; padding: 8px 10px; border: 1px solid #e5e7eb; border-radius: 8px; }
   .steps { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
   .steps li { background: #f9fafb; border-radius: 10px; padding: 10px 14px; display: flex; flex-direction: column; }
   .steps li.late { animation: pop .25s ease-out; }

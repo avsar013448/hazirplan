@@ -31,6 +31,8 @@ describe('CantasiEditor — çanta checklist persistence', () => {
     await waitFor(async () => {
       const stored = (await db.sheets.get('s1'))!;
       expect(stored.type === 'deprem_cantasi' && stored.items[0].done).toBe(true);
+      // updatedAt aslıyor (Aile Kodu LWW merge ground truth)
+      expect(stored.updatedAt).toBeGreaterThan(NOW);
     });
     expect(container.textContent).toContain('1/12 hazır');
   });

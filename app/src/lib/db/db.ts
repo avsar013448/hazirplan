@@ -11,11 +11,20 @@ export class HazirPlanDB extends Dexie {
 
   constructor() {
     super('hazirplan');
+    // v2: drillLog client UUID'ye geçti ('++id' cihazlar arası divergent key üretir,
+    // last-write-wins merge'i imkânsız kılar — code-review-1 fix)
     this.version(1).stores({
       plans: 'id, hazard, updatedAt',
       sheets: 'id, type, updatedAt',
       locations: 'id, type',
       drillLog: '++id, planId, date',
+      settings: 'id',
+    });
+    this.version(2).stores({
+      plans: 'id, hazard, updatedAt',
+      sheets: 'id, type, updatedAt',
+      locations: 'id, type',
+      drillLog: 'id, planId, date',
       settings: 'id',
     });
   }
@@ -29,8 +38,16 @@ export async function getSettings(): Promise<Settings> {
   const fresh: Settings = {
     id: 'app', aileKodu: null, aileKoduSharedWith: 0,
     printedCopy: false, exportedCopy: false, outsidePersonAware: false,
-    safeRoom: '', hasVehicle: null,
+    safeRoom: '', hasVehicle: null, updatedAt: Date.now(),
   };
   await db.settings.put(fresh);
   return fresh;
+}
+
+// Ayar güncelleme — updatedAt her zaman güncellenir (merge hazırlığı).
+export async function updateSettings(patch: Partial<Settings>): Promise<Settings> {
+  const cur = await getSettings();
+  const next = { ...cur, ...patch, updatedAt: Date.now() };
+  await db.settings.put(next);
+  return next;
 }

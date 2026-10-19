@@ -24,7 +24,6 @@
   let plan = $state<Plan | null>(null);
   let sheets = $state<Sheet[]>([]);
   let openSheetId = $state<string | null>(null);
-  let savedTick = $state(0);
 
   async function load() {
     const p = await db.plans.get(planId);
@@ -35,15 +34,22 @@
     }
   }
 
+  // Atomik oku-değiştir-yaz (kayıp güncelleme yarışı fix) + sheet editörlerini
+  // remount ETMEDEN yerel güncelleme (odak/düzenleme kaybı fix) — code-review-1.
   async function toggleStep(order: number) {
-    if (!plan) return;
-    const snap = $state.snapshot(plan) as Plan;
-    const s = snap.steps.find((x) => x.order === order);
-    if (!s) return;
-    s.done = !s.done;
-    await db.plans.put(snap);
-    await load();
-    savedTick++;
+    await db.transaction('rw', db.plans, async () => {
+      const p = await db.plans.get(planId);
+      if (!p) return;
+      const s = p.steps.find((x) => x.order === order);
+      if (!s) return;
+      s.done = !s.done;
+      p.updatedAt = Date.now();
+      await db.plans.put(p);
+      if (plan) {
+        const ls = plan.steps.find((x) => x.order === order);
+        if (ls) ls.done = s.done;
+      }
+    });
   }
 
   onMount(load);

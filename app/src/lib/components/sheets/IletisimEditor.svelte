@@ -5,11 +5,17 @@
 
   let { sheet }: { sheet: IletisimSheet } = $props();
   let s = $state(sheet);
-  let savedAt = $state(0);
+  let saveState = $state<'idle' | 'saved' | 'error'>('idle');
 
+  // Hata durumunda 'Kaydedilemedi' görünür — sessiz veri kaybı yok (review P1 fix).
   async function persist() {
-    await saveSheet(s);
-    savedAt = Date.now();
+    try {
+      await saveSheet(s);
+      saveState = 'saved';
+    } catch (e) {
+      console.error('Sheet kaydedilemedi:', e);
+      saveState = 'error';
+    }
   }
 
   function setPaceValue(key: 'primary' | 'alternate' | 'contingency' | 'emergency', e: Event) {
@@ -47,7 +53,7 @@
       <input type="tel" placeholder="Telefon" value={s.outOfAreaContact?.phone ?? ''} onblur={(e) => setContactField('phone', e)} />
     </div>
   </fieldset>
-  {#if savedAt}<span class="saved">Saved</span>{/if}
+  {#if saveState === 'saved'}<span class="saved">Saved</span>{:else if saveState === 'error'}<span class="error" role="alert">⚠ Kaydedilemedi</span>{/if}
 </div>
 
 <style>
@@ -61,4 +67,5 @@
   .hint { color: #6b7280; font-size: .8rem; margin: 0 0 8px; }
   .row { display: flex; gap: 8px; }
   .saved { color: #16a34a; font-size: .8rem; }
+  .error { color: #dc2626; font-size: .8rem; }
 </style>

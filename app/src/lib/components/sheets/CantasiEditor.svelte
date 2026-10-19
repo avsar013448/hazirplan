@@ -5,11 +5,17 @@
 
   let { sheet }: { sheet: CantasiSheet } = $props();
   let s = $state(sheet);
-  let savedAt = $state(0);
+  let saveState = $state<'idle' | 'saved' | 'error'>('idle');
 
+  // Hata durumunda 'Kaydedilemedi' görünür — sessiz veri kaybı yok (review P1 fix).
   async function persist() {
-    await saveSheet(s);
-    savedAt = Date.now();
+    try {
+      await saveSheet(s);
+      saveState = 'saved';
+    } catch (e) {
+      console.error('Sheet kaydedilemedi:', e);
+      saveState = 'error';
+    }
   }
 
   function toggleDone(idx: number) {
@@ -31,7 +37,7 @@
   <header>
     <h3>🎒 {s.title}</h3>
     <span class="owner">Sahibi: {s.owner}</span>
-    {#if savedAt}<span class="saved">Saved</span>{/if}
+    {#if saveState === 'saved'}<span class="saved">Saved</span>{:else if saveState === 'error'}<span class="error" role="alert">⚠ Kaydedilemedi</span>{/if}
   </header>
   <p class="progress">{s.items.filter((i) => i.done).length}/{s.items.length} hazır</p>
   <ul>
@@ -61,6 +67,7 @@
   header { display: flex; align-items: baseline; gap: 10px; }
   .owner, .progress { color: #6b7280; font-size: .85rem; }
   .saved { color: #16a34a; font-size: .8rem; }
+  .error { color: #dc2626; font-size: .8rem; }
   ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 6px; }
   li { display: flex; justify-content: space-between; align-items: center; gap: 8px;
     padding: 8px 10px; background: #f9fafb; border-radius: 10px; }

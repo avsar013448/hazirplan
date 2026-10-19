@@ -30,8 +30,21 @@ export interface ScoreResult {
 
 const W = { iletisim: 0.30, tahliye: 0.20, siginma: 0.15, evrak: 0.15, bakim: 0.10, paylasim: 0.10 };
 
-function sheetOf(sheets: Sheet[], type: Sheet['type']): Sheet | undefined {
-  return sheets.find((s) => s.type === type);
+// Türkçe-güvenli metin katlama: JS 'İ'.toLowerCase() → 'i̇' (birleşik nokta U+0307)
+// üretir ve eşleştirmeyi bozar (code-review-1 P1 fix).
+function trFold(s: string): string {
+  return s.replace(/İ/g, 'i').replace(/I/g, 'ı').toLocaleLowerCase('tr');
+}
+
+// Bir tipteki hangi sheet skorlanır? KURAL: plan.sheetIds sırasındaki İLK sheet.
+// Plan bağlantılı sheet yoksa (elle eklenen) array'deki ilkine düşer.
+// Ücretsiz tier tipte 2 sheet'e izin verir; kural deterministik ve belgelenmiştir.
+function sheetOf(plan: Plan, sheets: Sheet[], type: Sheet['type']): Sheet | undefined {
+  for (const id of plan.sheetIds) {
+    const s = sheets.find((x) => x.id === id && x.type === type);
+    if (s) return s;
+  }
+  return sheets.find((x) => x.type === type);
 }
 
 function mk(id: string, label: string, ok: boolean | null, evidence: string, nextStep: string): CheckResult {
@@ -43,11 +56,14 @@ function mk(id: string, label: string, ok: boolean | null, evidence: string, nex
  * scorePlan — computes the Hazırlık Skoru.
  * Deterministic: depends only on its inputs.
  */
-export function scorePlan(plan: Plan, sheets: Sheet[], drills: DrillEntry[], settings: Settings, locations: FamilyLocation[] = []): ScoreResult {
-  const iletisim = sheetOf(sheets, 'iletisim') as IletisimLike | undefined;
-  const tahliye = sheetOf(sheets, 'tahliye') as TahliyeLike | undefined;
-  const envanter = sheetOf(sheets, 'envanter') as EnvanterLike | undefined;
-  const acilKisiler = sheetOf(sheets, 'acil_kisiler') as KisilerLike | undefined;
+export function scorePlan(plan: Plan, sheets: Sheet[], drills: DrillEntry[], settings: Settings, locations: FamilyLocation[] = [], ozelIhtiyacStepTitles: string[] = []): ScoreResult {
+  const iletisim = sheetOf(plan, sheets, 'iletisim') as IletisimLike | undefined;
+  const tahliye = sheetOf(plan, sheets, 'tahliye') as TahliyeLike | undefined;
+  const envanter = sheetOf(plan, sheets, 'envanter') as EnvanterLike | undefined;
+  const acilKisiler = sheetOf(plan, sheets, 'acil_kisiler') as KisilerLike | undefined;
+  // Tatbikat kayıtları PLAN BAZLI değerlendirilir (karar: per-plan attribution,
+  // code-review-1 fix) — başka planın tatbikatı bu plana puan vermez.
+  const planDrills = drills.filter((d) => d.planId === plan.id);
 
   // ---------- İletişim (30%) ----------
   const paceCount = iletisim ? [iletisim.primary, iletisim.alternate, iletisim.contingency, iletisim.emergency].filter(Boolean).length : 0;
@@ -61,7 +77,7 @@ export function scorePlan(plan: Plan, sheets: Sheet[], drills: DrillEntry[], set
       iletisim?.outOfAreaContact ? `Kontak: ${iletisim.outOfAreaContact.name}` : 'Bölge dışı kontak yok',
       'Sizden uzakta yaşayan bir kişiyi seçin, haber verin. Aile fertleri herkesin numarasını telefonun yanına yazılı tutsun.'),
     mk('cevrimdisi_kontak', 'Kontaklar çevrimdışı erişilebilir',
-      settings.printedCopy || settings.exportedCopy ? true : null,
+      settings.printedCopy || settings.exportedCopy,
       settings.printedCopy ? 'Yazdırılmış kopya var' : settings.exportedCopy ? 'Dijital yedek var' : 'Yazdırılmış/dijital kopya yok',
       'Kişi listesini yazdırın. Bir kopyası çantaya, biri buzdolabına, biri de araca.'),
     mk('bulusma_noktalari', '2 buluşma noktası tanımlı',
@@ -69,8 +85,8 @@ export function scorePlan(plan: Plan, sheets: Sheet[], drills: DrillEntry[], set
       locations.length ? `Konumlar: ${locations.length}, buluşma: ${locations.filter((l) => l.type === 'rally').length}` : 'Konum yok',
       'İki gerçek yer seçin. Biri evin yürüme mesafesinde, diğeri birkaç km ötede, gideceğiniz yönde. Adres veya tanımlı yer adı verin.'),
     mk('iletisim_tatbikat', 'İletişim tatbikatı yapıldı',
-      drills.some((d) => d.kind === 'comms' || d.kind === 'full') ? true : false,
-      drills.length ? `Tatbikat kaydı: ${drills.length}` : 'Hiç tatbikat kaydı yok',
+      planDrills.some((d) => d.kind === 'comms' || d.kind === 'full') ? true : false,
+      planDrills.length ? `Bu planın tatbikat kaydı: ${planDrills.length}` : 'Bu plan için tatbihat kaydı yok',
       'Bir Cumartesi seçin. Planın iletişim kısmını baştan sona çalıştırın. Bozuk bir şey mutlaka bulacaksınız. Onu düzeltin.'),
   ];
 
@@ -114,14 +130,14 @@ export function scorePlan(plan: Plan, sheets: Sheet[], drills: DrillEntry[], set
       envanter ? `Su: ${envanter.waterLiters}L / gerekli ${requiredWater}L` : 'Envanter yok',
       `Hane başına gereken: ${requiredWater}L. Kapalı şişelerle, karanlık ve serin bir yerde saklayın.`),
     mk('envanter_doluluk', 'Envanter temel eşyalar dolu',
-      envanter ? envanter.items.length >= 8 && envanter.items.every((i) => i.done || i.qty > 0) : null,
-      envanter ? `Envanter: ${envanter.items.length} kalem` : 'Envanter yok',
-      'İlk yardım, el feneri, yedek pil, güç bankası, ıslık, toz maskesi, uzun ömürlü gıda — temel listeyi tamamlayın.'),
+      envanter ? envanter.items.filter((i) => i.done).length >= 8 : null,
+      envanter ? `Envanter: ${envanter.items.length} kalem, ${envanter.items.filter((i) => i.done).length} hazır` : 'Envanter yok',
+      'İlk yardım, el feneri, yedek pil, güç bankası, ıslık, toz maskesi, uzun ömürlü gıda — temel listeyi tamamlayın ve "hazır" olarak işaretleyin.'),
   ];
   if (medsNeeded) {
     siginmaChecks.push(
       mk('medikal_ihtiyac', 'İlaç/medikal ihtiyaçlar kayıtlı',
-        envanter && envanter.items.some((i) => i.name.toLowerCase().includes('ilaç') || i.name.toLowerCase().includes('ilac')) ? true : false,
+        envanter && envanter.items.some((i) => trFold(i.name).includes('ilaç') || trFold(i.name).includes('ilac')) ? true : false,
         'Kritik ilaç/medikal cihaz işaretli',
         'Sürekli kullanılan ilaçların 7 günlük yedeğini envantere ekleyin; son kullanma tarihini takip edin.'));
   }
@@ -145,10 +161,12 @@ export function scorePlan(plan: Plan, sheets: Sheet[], drills: DrillEntry[], set
     || plan.circumstances.includes('mobility') || plan.circumstances.includes('medical_equipment');
   const bakimChecks: CheckResult[] = hasDependents ? [
     mk('ozel_ihtiyac_plani', 'Özel ihtiyaç planı kayıtlı',
-      plan.steps.length === 0 ? null : plan.steps.some((s) => s.title.toLowerCase().includes('çocuk') || s.title.toLowerCase().includes('yaşlı')
-        || s.title.toLowerCase().includes('engel') || s.title.toLowerCase().includes('yardım')),
+      // Yapısal veri: sihirbaz, bağımlı hanelere ve koşullara otomatik adım enjekte
+      // eder (assemble.ts). Kontrol, bilinen enjekte-adım başlıklarını arar —
+      // serbest metin eşleştirmesi değil (code-review-1 P1 fix).
+      plan.steps.length === 0 ? null : plan.steps.some((s) => ozelIhtiyacStepTitles.includes(s.title)),
       plan.steps.length ? `Adım sayısı: ${plan.steps.length}, özel ihtiyaç adımı aranıyor` : 'Plan adımı yok',
-      'Kim kime, ne zaman yardım edecek? Çocuk/yaşlı/engelli için "kim sorumlu" adımını plana ekleyin.'),
+      'Kim kime, ne zaman yardım edecek? Planı yeniden oluşturun: sihirbaz, hane üyelerinize göre "kim sorumlu" adımını otomatik ekler.'),
   ] : [];
 
   // ---------- Paylaşım & Erişilebilirlik (10%) ----------
