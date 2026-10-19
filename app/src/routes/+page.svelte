@@ -1,7 +1,9 @@
 <script lang="ts">
   // HazırPlan — Karşılama / Dashboard (specs/mvp-spec.md §6.1)
   import { onMount } from 'svelte';
+  import pack from '../content/tr.json';
   import { db, getSettings } from '#lib/db/db';
+  import type { ShareLogEntry } from '#lib/types';
   import { scorePlan, type ScoreResult } from '#lib/scoring/score';
   import type { Plan, Sheet, DrillEntry, FamilyLocation, Settings } from '#lib/types';
   import Wizard from '#lib/components/Wizard.svelte';
@@ -10,6 +12,7 @@
   let sheets = $state<Sheet[]>([]);
   let drills = $state<DrillEntry[]>([]);
   let locations = $state<FamilyLocation[]>([]);
+  let shares = $state<ShareLogEntry[]>([]);
   let settings = $state<Settings | null>(null);
   let score = $state<ScoreResult | null>(null);
   let wizardOpen = $state(false);
@@ -19,9 +22,18 @@
     sheets = await db.sheets.toArray();
     drills = await db.drillLog.toArray();
     locations = await db.locations.toArray();
+    shares = await db.shareLog.toArray();
     settings = await getSettings();
     computeScore();
   }
+
+  // Sihirbazın yapısal olarak enjekte ettiği adım başlıkları — bakım kontrolü
+  // bunları arar (plan.sheetIds sırası yerine başlık eşleşmesi, code-review-1)
+  const cs = pack.circumstanceSteps as Record<string, { title: string }>;
+  const ozelIhtiyacTitles: string[] = [
+    ...('dependentStep' in pack ? [(pack as { dependentStep: { title: string } }).dependentStep.title] : []),
+    ...Object.values(cs).map((s) => s.title),
+  ];
 
   function computeScore() {
     if (!settings) return;
@@ -32,7 +44,7 @@
     }
     const primary = plans[0]; // en güncel plan hane skorunu belirler
     const linkedSheets = sheets.filter((s) => primary.sheetIds.includes(s.id));
-    score = scorePlan(primary, linkedSheets, drills, settings, locations);
+    score = scorePlan(primary, linkedSheets, drills, settings, locations, ozelIhtiyacTitles, shares);
   }
 
   function handleSaved() {

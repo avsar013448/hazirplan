@@ -18,12 +18,14 @@
   import { db } from '../db/db';
   import type { Plan, Sheet } from '../types';
   import SheetEditor from './sheets/SheetEditor.svelte';
+  import ShareDialog from './ShareDialog.svelte';
 
   let { planId }: { planId: string } = $props();
 
   let plan = $state<Plan | null>(null);
   let sheets = $state<Sheet[]>([]);
   let openSheetId = $state<string | null>(null);
+  let shareOpen = $state(false);
 
   async function load() {
     const p = await db.plans.get(planId);
@@ -59,10 +61,22 @@
   <article class="detail">
     <header>
       <h1>{plan.title}</h1>
-      <span class="meta">
-        {plan.steps.filter((s) => s.done).length}/{plan.steps.length} adım tamam
-      </span>
+      <div class="head-actions">
+        <span class="meta">
+          {plan.steps.filter((s) => s.done).length}/{plan.steps.length} adım tamam
+        </span>
+        <button class="sharebtn" onclick={() => (shareOpen = true)}>📤 Paylaş</button>
+      </div>
     </header>
+
+    {#if shareOpen && plan}
+      <div class="share-backdrop" role="presentation" onclick={(e) => { if (e.target === e.currentTarget) shareOpen = false; }}>
+        <div class="share-modal">
+          <button class="close" aria-label="Kapat" onclick={() => (shareOpen = false)}>×</button>
+          <ShareDialog {plan} {sheets} onclose={() => (shareOpen = false)} />
+        </div>
+      </div>
+    {/if}
 
     <ol class="steps">
       {#each plan.steps as s (s.order)}
@@ -125,6 +139,12 @@
 <style>
   .detail { max-width: 720px; margin: 0 auto; padding: 16px; font-family: system-ui, sans-serif; }
   header { display: flex; justify-content: space-between; align-items: baseline; }
+  .head-actions { display: flex; align-items: center; gap: 10px; }
+  .sharebtn { font: inherit; font-size: .85rem; background: #f59e0b; color: #111; font-weight: 600;
+    border: none; border-radius: 999px; padding: 7px 16px; cursor: pointer; }
+  .share-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: grid; place-items: center; z-index: 10; }
+  .share-modal { background: #fff; border-radius: 16px; max-height: 90vh; overflow: auto; position: relative; }
+  .share-modal .close { position: absolute; top: 8px; right: 12px; background: none; border: none; font-size: 1.4rem; cursor: pointer; }
   h1 { font-size: 1.4rem; margin: 0 0 16px; }
   h2 { font-size: 1rem; margin: 24px 0 8px; }
   .meta { color: #6b7280; font-size: .9rem; }

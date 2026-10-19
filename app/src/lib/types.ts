@@ -118,13 +118,25 @@ export interface FamilyLocation {
 
 export interface DrillEntry { id: string; planId: string; date: string; kind: 'full' | 'comms' | 'evac' }
 
+// ---- Paylaşım (komşu/arkadaş/misafir/grup — Aile Kodu öncesi) ----
+export type ShareKind = 'komsu' | 'arkadas' | 'misafir' | 'grup';
+export type ShareMethod = 'print' | 'webshare' | 'whatsapp' | 'guest' | 'clipboard';
+
+export interface ShareLogEntry {
+  id: string;
+  planId: string;
+  kind: ShareKind;
+  name?: string;          // alıcı adı (isteğe bağlı)
+  method: ShareMethod;
+  date: string;            // ISO
+}
+
 export interface Settings {
   id: 'app'; // singleton
   aileKodu: string | null;
   aileKoduSharedWith: number;
   printedCopy: boolean;
   exportedCopy: boolean;
-  outsidePersonAware: boolean;
   safeRoom: string;          // güvenli oda
   hasVehicle: boolean | null; // null = kullanıcı henüz belirtmedi
   updatedAt: number;         // Aile Kodu merge için

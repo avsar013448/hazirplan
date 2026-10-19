@@ -4,7 +4,7 @@ import type { Plan, Settings, Sheet, DrillEntry, FamilyLocation } from '../types
 
 const emptySettings: Settings = {
   id: 'app', aileKodu: null, aileKoduSharedWith: 0,
-  printedCopy: false, exportedCopy: false, outsidePersonAware: false,
+  printedCopy: false, exportedCopy: false,
   safeRoom: '', hasVehicle: null, updatedAt: 0,
 };
 
@@ -44,13 +44,16 @@ describe('scorePlan — Hazırlık Skoru', () => {
     const drills: DrillEntry[] = [{ id: 'd1', planId: 'p1', date: '2026-10-01', kind: 'comms' }];
     const settings: Settings = {
       ...emptySettings, aileKodu: 'KOD1234', aileKoduSharedWith: 3,
-      printedCopy: true, outsidePersonAware: true, safeRoom: 'Banyo', hasVehicle: true,
+      printedCopy: true, safeRoom: 'Banyo', hasVehicle: true,
     };
+    const shares: import('../types').ShareLogEntry[] = [
+      { id: 'sh1', planId: 'p1', kind: 'komsu', name: 'Ayşe', method: 'print', date: '2026-10-01' },
+    ];
     const locations: FamilyLocation[] = [
       { id: 'l1', name: 'Okul bahçesi', type: 'rally', lat: 0, lng: 0 },
       { id: 'l2', name: 'Stadyum', type: 'rally', lat: 0, lng: 0 },
     ];
-    const r = scorePlan(plan, sheets, drills, settings, locations);
+    const r = scorePlan(plan, sheets, drills, settings, locations, [], shares);
     expect(r.pct).toBe(100);
     expect(r.level).toBe('Hazır Aile');
     for (const c of r.categories.filter((x) => x.applicable)) {
@@ -89,7 +92,7 @@ describe('scorePlan — Hazırlık Skoru', () => {
   it('partial readiness lands in "Yoldasınız" band', () => {
     const settings: Settings = {
       ...emptySettings,
-      printedCopy: true, safeRoom: 'Banyo', aileKodu: 'KOD1', aileKoduSharedWith: 2, outsidePersonAware: true,
+      printedCopy: true, safeRoom: 'Banyo', aileKodu: 'KOD1', aileKoduSharedWith: 2,
     };
     const sheets: Sheet[] = [
       { type: 'iletisim', id: 's1', title: 'İletişim', primary: 'Telefon', alternate: 'SMS', contingency: 'WhatsApp', emergency: 'Buluşma noktası', outOfAreaContact: { name: 'Teyze', phone: '0533...' }, updatedAt: 0 },
@@ -100,7 +103,10 @@ describe('scorePlan — Hazırlık Skoru', () => {
       { id: 'l1', name: 'Okul bahçesi', type: 'rally', lat: 0, lng: 0 },
       { id: 'l2', name: 'Stadyum', type: 'rally', lat: 0, lng: 0 },
     ];
-    const r = scorePlan(emptyPlan, sheets, drills, settings, locations);
+    const shares: import('../types').ShareLogEntry[] = [
+      { id: 'sh2', planId: 'p1', kind: 'arkadas', method: 'whatsapp', date: '2026-10-02' },
+    ];
+    const r = scorePlan(emptyPlan, sheets, drills, settings, locations, [], shares);
     expect(r.pct).toBeGreaterThan(40);
     expect(r.pct).toBeLessThan(70);
     expect(r.level).toBe('Yoldasınız');
@@ -156,5 +162,16 @@ describe('scorePlan — Hazırlık Skoru', () => {
     const planA: Plan = { ...emptyPlan, sheetIds: ['A', 'B'] };
     const rA = scorePlan(planA, [full, empty], [], emptySettings, []);
     expect(byId(rA).status).toBe('pass');
+  });
+
+  it('aile_disi_haberdar reads the REAL share log (not a settings checkbox)', () => {
+    const shares: import('../types').ShareLogEntry[] = [
+      { id: 'shA', planId: 'p1', kind: 'komsu', method: 'print', date: '2026-10-01' },
+    ];
+    const withShare = scorePlan(emptyPlan, [], [], emptySettings, [], [], shares);
+    const byId = (r: ReturnType<typeof scorePlan>) => r.categories.flatMap((c) => c.checks).find((c) => c.id === 'aile_disi_haberdar')!;
+    expect(byId(withShare).status).toBe('pass');
+    const noShare = scorePlan(emptyPlan, [], [], emptySettings, [], [], []);
+    expect(byId(noShare).status).toBe('planlanmadi');
   });
 });

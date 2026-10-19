@@ -1,12 +1,13 @@
 // Dexie — local-first storage. All app data lives on this device (no backend in MVP).
 import Dexie, { type Table } from 'dexie';
-import type { Plan, Sheet, DrillEntry, FamilyLocation, Settings } from '../types';
+import type { Plan, Sheet, DrillEntry, FamilyLocation, Settings, ShareLogEntry } from '../types';
 
 export class HazirPlanDB extends Dexie {
   plans!: Table<Plan, string>;
   sheets!: Table<Sheet, string>;
   locations!: Table<FamilyLocation, string>;
   drillLog!: Table<DrillEntry, string>;
+  shareLog!: Table<ShareLogEntry, string>;
   settings!: Table<Settings, string>;
 
   constructor() {
@@ -27,6 +28,16 @@ export class HazirPlanDB extends Dexie {
       drillLog: 'id, planId, date',
       settings: 'id',
     });
+    // v3: paylaşım günlüğü (komşu/arkadaş/misafir/grup) — Hazırlık Skoru
+    // 'aile dışı haberdar' kontrolü artık gerçek veriden okur
+    this.version(3).stores({
+      plans: 'id, hazard, updatedAt',
+      sheets: 'id, type, updatedAt',
+      locations: 'id, type',
+      drillLog: 'id, planId, date',
+      shareLog: 'id, planId, date',
+      settings: 'id',
+    });
   }
 }
 
@@ -37,7 +48,7 @@ export async function getSettings(): Promise<Settings> {
   if (s) return s;
   const fresh: Settings = {
     id: 'app', aileKodu: null, aileKoduSharedWith: 0,
-    printedCopy: false, exportedCopy: false, outsidePersonAware: false,
+    printedCopy: false, exportedCopy: false,
     safeRoom: '', hasVehicle: null, updatedAt: Date.now(),
   };
   await db.settings.put(fresh);
@@ -50,4 +61,15 @@ export async function updateSettings(patch: Partial<Settings>): Promise<Settings
   const next = { ...cur, ...patch, updatedAt: Date.now() };
   await db.settings.put(next);
   return next;
+}
+
+// Paylaşım günlüğü — her paylaşım EYLEM olarak kaydedilir; Hazırlık Skoru'nun
+// 'aile dışı haberdar' kontrolü bu gerçek veriden okur (settings checkbox değil).
+export async function logShare(entry: ShareLogEntry): Promise<ShareLogEntry> {
+  await db.shareLog.put(entry);
+  return entry;
+}
+
+export async function getShares(planId: string): Promise<ShareLogEntry[]> {
+  return db.shareLog.where('planId').equals(planId).toArray();
 }

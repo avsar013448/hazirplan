@@ -1,6 +1,6 @@
 // Hazırlık Skoru — deterministic readiness rubric (specs/mvp-spec.md §5)
 // Pure function: no I/O, no randomness, no Date.now(). Same input → same output.
-import type { DrillEntry, FamilyLocation, Plan, Settings, Sheet } from '../types';
+import type { DrillEntry, FamilyLocation, Plan, Settings, Sheet, ShareLogEntry } from '../types';
 
 export type CheckStatus = 'pass' | 'planlanmadi' | 'basarisiz';
 
@@ -56,7 +56,7 @@ function mk(id: string, label: string, ok: boolean | null, evidence: string, nex
  * scorePlan — computes the Hazırlık Skoru.
  * Deterministic: depends only on its inputs.
  */
-export function scorePlan(plan: Plan, sheets: Sheet[], drills: DrillEntry[], settings: Settings, locations: FamilyLocation[] = [], ozelIhtiyacStepTitles: string[] = []): ScoreResult {
+export function scorePlan(plan: Plan, sheets: Sheet[], drills: DrillEntry[], settings: Settings, locations: FamilyLocation[] = [], ozelIhtiyacStepTitles: string[] = [], shares: ShareLogEntry[] = []): ScoreResult {
   const iletisim = sheetOf(plan, sheets, 'iletisim') as IletisimLike | undefined;
   const tahliye = sheetOf(plan, sheets, 'tahliye') as TahliyeLike | undefined;
   const envanter = sheetOf(plan, sheets, 'envanter') as EnvanterLike | undefined;
@@ -179,10 +179,14 @@ export function scorePlan(plan: Plan, sheets: Sheet[], drills: DrillEntry[], set
       settings.printedCopy ? true : false,
       settings.printedCopy ? 'Yazdırılmış' : 'Yazdırılmamış',
       'Planı yazdırıp buzdolabına asın. Telefon biter, kağıt bitmez.'),
+    // Gerçek veri: paylaşım günlüğünden okur (komşu/arkadaş/misafir/grup)
     mk('aile_disi_haberdar', 'Aile dışı bir kişi planın varlığından haberdar',
-      settings.outsidePersonAware ? true : null,
-      settings.outsidePersonAware ? 'Haberdar kişi işaretli' : 'İşaretlenmemiş',
-      'Bir komşu veya akraba, planınızın olduğunu bilsin. O koordine edebilir.'),
+      shares.filter((sh) => sh.planId === plan.id).length > 0 ? true : null,
+      (() => {
+        const planShares = shares.filter((sh) => sh.planId === plan.id);
+        return planShares.length ? `Paylaşılan: ${planShares.length} kişi (son: ${planShares[planShares.length - 1].kind})` : 'Henüz paylaşılmamış';
+      })(),
+      'Planı bir komşu, arkadaş veya grupla paylaşın. Onlar koordine edebilir — Paylaş butonu bu planı kaydeder.'),
   ];
 
   // ---------- Assemble ----------
