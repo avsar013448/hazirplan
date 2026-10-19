@@ -111,6 +111,13 @@ Her kontrol: **durum** (*"Planlanmadı"* = konu planda hiç geçmiyor / *"Başar
 - *"Bir Cumartesi seçin. Planın iletişim kısmını baştan sona çalıştırın. Bozuk bir şey mutlaka bulacaksınız. Onu düzeltin."*
 - *"Kişi listesini yazdırın. Bir kopyası çantaya, biri buzdolabına, biri de araca."*
 
+### 5.4 Documented decisions (code-review-1)
+- Drill attribution **per-plan** (`drillLog.planId`).
+- Same-type sheet scoring: **first sheet in `plan.sheetIds` order**.
+- Boolean settings false = **"Başarısız"** (explicit no); absent topic = "Planlanmadı".
+- Water target: **9L/person/3-day** (2L içme + 1L hazırlık/gün) in envanter; çanta carries 2L içme.
+- Dependent households get the **"Kim, kime yardım ediyor?"** step auto-injected by assembly; the bakım check matches injected step titles (passed to `scorePlan` as `ozelIhtiyacStepTitles`).
+
 ### 5.3 Why deterministic wins here
 - Free + offline + **unlimited** vs their 5/month paid quota — the habit-forming feature becomes our top-of-funnel
 - Instant, explicable, no hallucination (their AI audit invented "isolated location" details about a 1-step plan)
