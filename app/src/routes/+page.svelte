@@ -82,12 +82,12 @@
         <ul>
           {#each plans as p (p.id)}
             <li class="plan">
-              <div>
+              <a href="/plan/{p.id}" class="planlink">
                 <strong>{p.title}</strong>
                 <span class="meta">
                   {p.steps.length} adım · {p.steps.filter((s) => s.done).length}/{p.steps.length} tamam
                 </span>
-              </div>
+              </a>
             </li>
           {/each}
         </ul>
@@ -125,6 +125,7 @@
   .plans ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
   .plan { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px;
     background: #f9fafb; border-radius: 10px; }
+  .planlink { text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 2px; }
   .meta { display: block; color: #6b7280; font-size: .8rem; }
   .btn { padding: 10px 18px; border-radius: 10px; border: none; font: inherit; cursor: pointer; }
   .btn.primary { background: #f59e0b; color: #111; font-weight: 600; }
