@@ -101,7 +101,7 @@ ReadyPlan's best Premium feature (Plan Audit: AI-graded, **5/month quota, paid**
 | **Evde Sığınma** | 15% | Güvenli oda tanımlı · 72 saat su (kişi başı hesap, envanterden) · Envanter doluluk ≥ temel · İlaç/medikal ihtiyaçlar kayıtlı |
 | **Evrak & Finans** | 15% | Kimlik belgeleri listesi · Sigorta bilgileri · Nakit buffer · Dijital/ fiziksel kopya yeri |
 | **Bakıma Muhtaç Kişiler** | 10% | Koşullu: hanedde çocuk/yaşlı/engelli varsa aktifleşen özel ihtiyaç planı kontrolü (yoksa kategori "uygulanamaz" sayılır ve ağırlık dağıtımı yeniden normalize edilir) |
-| **Paylaşım & Erişilebilirlik** | 10% | Aile Kodu ile ≥1 üyeye paylaşılmış · Yazdırılmış kopya var · Aile dışı bir kişi planın varlığından haberdar (checkbox) |
+| **Paylaşım & Erişilebilirlik** | 10% | Aile Kodu ile ≥1 üyeye paylaşılmış · Yazdırılmış kopya var (yazdırma eylemi otomatik işaretler) · Aile dışı kişi haberdar (**paylaşım günlüğünden**: komşu/arkadaş/misafir/grup ile gerçek paylaşılmış) |
 
 Score = Σ geçilen kontrol × kategori ağırlığı (uygulanamaz kategoriler normalize) → % → seviye:
 **0–39 "Daha yeni başladınız" · 40–69 "Yoldasınız" · 70–100 "Hazır Aile"** — dashboard kartı + öneri sırası (⚠️/💡/ℹ️) bu skordan üretilir.
@@ -134,7 +134,9 @@ Her kontrol: **durum** (*"Planlanmadı"* = konu planda hiç geçmiyor / *"Başar
 7. **Tatbihat** — reminder interval per plan (default: ayda 1), local notification, "tatbikatı yaptım" → drillLog + puan
 8. **Başarımlar** — MVP set: 12 achievements (first plan, %100 çanta, ilk tatbihat, aileye kod gönder, envanter tam…), points, 3 levels (Hazırlık Çırağı → Hazırlık Ustası → Hazır Aile)
 9. **Ayarlar** — dil (tr), yazdırma, veri dışa/içe aktar (JSON), Aile Kodu yönetimi
-10. **(Web) Bilgi/Yardım** — statik: 112, AFAD linkleri, SSS
+10. **Paylaş** (PlanDetail'den) — alıcı: 🏘️ Komşu / 🤝 Arkadaş / 🚪 Misafir / 👥 Grup (+isteğe bağlı isim); eylemler: Yazdır (misafir kopyası → printedCopy otomatik true), WhatsApp (özet metin), Uygulamayla gönder (Web Share/pano), Misafir görünümü; HER eylem shareLog'a yazılır → skor gerçek veriden okur
+11. **Misafir Görünümü** (`/plan/[id]/misafir`) — salt-okunur plan sayfası (adımlar + acil kişiler + PACE), buzdolabı-posteri @media print CSS
+12. **(Web) Bilgi/Yardım** — statik: 112, AFAD linkleri, SSS
 
 **Deliberately NOT in MVP:** groups with roles, knowledge-check quizzes, AI assistant, route builder with turn-by-turn, online sync. (Hazırlık Skoru covers the audit use-case deterministically — §5.)
 
