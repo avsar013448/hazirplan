@@ -1,2 +1,134 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+  // HazırPlan — Karşılama / Dashboard (specs/mvp-spec.md §6.1)
+  import { onMount } from 'svelte';
+  import { db, getSettings } from '#lib/db/db';
+  import { scorePlan, type ScoreResult } from '#lib/scoring/score';
+  import type { Plan, Sheet, DrillEntry, FamilyLocation, Settings } from '#lib/types';
+  import Wizard from '#lib/components/Wizard.svelte';
+
+  let plans = $state<Plan[]>([]);
+  let sheets = $state<Sheet[]>([]);
+  let drills = $state<DrillEntry[]>([]);
+  let locations = $state<FamilyLocation[]>([]);
+  let settings = $state<Settings | null>(null);
+  let score = $state<ScoreResult | null>(null);
+  let wizardOpen = $state(false);
+
+  async function refresh() {
+    plans = await db.plans.orderBy('updatedAt').reverse().toArray();
+    sheets = await db.sheets.toArray();
+    drills = await db.drillLog.toArray();
+    locations = await db.locations.toArray();
+    settings = await getSettings();
+    computeScore();
+  }
+
+  function computeScore() {
+    if (!settings) return;
+    if (plans.length === 0) {
+      // hane henüz plan yapmadı — skor kartı boş state gösterir
+      score = null;
+      return;
+    }
+    const primary = plans[0]; // en güncel plan hane skorunu belirler
+    const linkedSheets = sheets.filter((s) => primary.sheetIds.includes(s.id));
+    score = scorePlan(primary, linkedSheets, drills, settings, locations);
+  }
+
+  function handleSaved() {
+    wizardOpen = false;
+    refresh();
+  }
+
+  onMount(refresh);
+</script>
+
+<svelte:head>
+  <title>HazırPlan — Ailenizin acil durum planı</title>
+</svelte:head>
+
+<main>
+  <header class="top">
+    <h1>Hazır<span class="accent">Plan</span></h1>
+    <span class="tagline">Plan, afetten önce var olmalı.</span>
+  </header>
+
+  <section class="grid">
+    <!-- Hazırlık Skoru kartı -->
+    <article class="card score">
+      <h2>Hazırlık Durumu</h2>
+      {#if score}
+        <div class="score-value">{score.pct}%</div>
+        <div class="score-level">{score.level}</div>
+        <ul class="cats">
+          {#each score.categories.filter((c) => c.applicable) as c (c.id)}
+            <li class:ok={c.passed === c.total}>
+              {c.name} <span>{c.passed}/{c.total}</span>
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <p class="empty">Daha yeni başladınız. İlk planınızı oluşturun — 1 saatten kısa sürer.</p>
+      {/if}
+      <button class="btn primary" onclick={() => (wizardOpen = true)}>Yeni Plan</button>
+    </article>
+
+    <!-- Planlarım -->
+    <article class="card plans">
+      <h2>Planlarım</h2>
+      {#if plans.length === 0}
+        <p class="empty">Henüz plan yok. "Yeni Plan" ile sihirbazı başlatın.</p>
+      {:else}
+        <ul>
+          {#each plans as p (p.id)}
+            <li class="plan">
+              <div>
+                <strong>{p.title}</strong>
+                <span class="meta">
+                  {p.steps.length} adım · {p.steps.filter((s) => s.done).length}/{p.steps.length} tamam
+                </span>
+              </div>
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </article>
+  </section>
+
+  {#if wizardOpen}
+    <div class="modal-backdrop" role="presentation" onclick={(e) => { if (e.target === e.currentTarget) wizardOpen = false; }}>
+      <div class="modal">
+        <button class="close" aria-label="Kapat" onclick={() => (wizardOpen = false)}>×</button>
+        <Wizard onsaved={handleSaved} />
+      </div>
+    </div>
+  {/if}
+</main>
+
+<style>
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 64px; font-family: system-ui, sans-serif; }
+  .top { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+  h1 { margin: 0; font-size: 1.6rem; }
+  .accent { color: #f59e0b; }
+  .tagline { color: #6b7280; font-size: .9rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 20px; }
+  .card h2 { margin: 0 0 12px; font-size: 1.05rem; }
+  .score-value { font-size: 2.6rem; font-weight: 700; }
+  .score-level { color: #f59e0b; font-weight: 600; margin-bottom: 10px; }
+  .cats { list-style: none; padding: 0; margin: 0 0 16px; display: flex; flex-direction: column; gap: 4px; font-size: .88rem; }
+  .cats li { display: flex; justify-content: space-between; color: #374151; }
+  .cats li.ok { color: #16a34a; }
+  .cats span { color: #9ca3af; }
+  .empty { color: #6b7280; font-size: .92rem; }
+  .plans ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .plan { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px;
+    background: #f9fafb; border-radius: 10px; }
+  .meta { display: block; color: #6b7280; font-size: .8rem; }
+  .btn { padding: 10px 18px; border-radius: 10px; border: none; font: inherit; cursor: pointer; }
+  .btn.primary { background: #f59e0b; color: #111; font-weight: 600; }
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: grid; place-items: center; z-index: 10; }
+  .modal { background: #fff; border-radius: 16px; max-height: 90vh; overflow: auto; position: relative; }
+  .close { position: absolute; top: 8px; right: 12px; background: none; border: none; font-size: 1.4rem; cursor: pointer; }
+</style>
