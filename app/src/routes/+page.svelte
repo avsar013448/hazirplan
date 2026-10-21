@@ -66,6 +66,7 @@
   <header class="top">
     <h1>Hazır<span class="accent">Plan</span></h1>
     <span class="tagline">Plan, afetten önce var olmalı.</span>
+    <a class="aile" href="/aile" title="Aile Kodu">👨‍👩‍👧 Aile</a>
   </header>
 
   <section class="grid">
@@ -126,6 +127,8 @@
   h1 { margin: 0; font-size: 1.6rem; }
   .accent { color: #f59e0b; }
   .tagline { color: #6b7280; font-size: .9rem; }
+  .aile { margin-left: auto; text-decoration: none; font-size: .9rem; color: #b45309;
+    background: #fffbeb; border: 1px solid #fcd34d; border-radius: 999px; padding: 5px 14px; }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
   .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 20px; }
