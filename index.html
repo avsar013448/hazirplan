@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="text-scale" content="scale" />
+		<link href="/hazirplan/_app/immutable/entry/start.DSBgsv_3.js" rel="modulepreload">
+		<link href="/hazirplan/_app/immutable/entry/payload.DSmR2FwN.js" rel="modulepreload">
+		<link href="/hazirplan/_app/immutable/chunks/CRzLMJPS.js" rel="modulepreload">
+		<link href="/hazirplan/_app/immutable/chunks/BgoCUHdQ.js" rel="modulepreload">
+		<link href="/hazirplan/_app/immutable/chunks/CCF2hC9K.js" rel="modulepreload">
+		<link href="/hazirplan/_app/immutable/chunks/2ABgXsEF.js" rel="modulepreload">
+		<link href="/hazirplan/_app/immutable/chunks/DYrviY11.js" rel="modulepreload">
+		<link href="/hazirplan/_app/immutable/entry/app.CGKhBBLx.js" rel="modulepreload">
+		<link href="/hazirplan/_app/immutable/nodes/0.BPyEAA6a.js" rel="modulepreload">
+		<link href="/hazirplan/_app/immutable/chunks/XKyaHtl9.js" rel="modulepreload">
+		<link href="/hazirplan/_app/immutable/chunks/BhXW8qt5.js" rel="modulepreload">
+		
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">
+			<script>
+				{
+					__sveltekit_15krzw4 = {
+						base: "/hazirplan",
+						version: "1792601309724",
+						assets: "/hazirplan"
+					};
+
+					const element = document.currentScript.parentElement;
+
+					import("/hazirplan/_app/immutable/entry/start.DSBgsv_3.js").then(async (kit) => {
+						kit.init(__sveltekit_15krzw4);
+						const app = await import("/hazirplan/_app/immutable/entry/app.CGKhBBLx.js");
+						kit.start(app, element);
+					});
+
+					if ('serviceWorker' in navigator) {
+						const script_url = '/hazirplan/service-worker.js';
+						const policy = globalThis?.window?.trustedTypes?.createPolicy(
+							'sveltekit-trusted-url',
+							{ createScriptURL(url) { return url; } }
+						);
+						const sanitised = policy?.createScriptURL(script_url) ?? script_url;
+						addEventListener('load', function () {
+							navigator.serviceWorker.register(sanitised, { type: 'module' });
+						});
+					}
+				}
+			</script>
+		</div>
+	</body>
+</html>
