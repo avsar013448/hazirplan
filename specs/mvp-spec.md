@@ -142,7 +142,7 @@ Her kontrol: **durum** (*"Planlanmadı"* = konu planda hiç geçmiyor / *"Başar
 
 ## 7. Technical architecture
 
-- **PWA**: SvelteKit, static export; installable; service worker precaches app shell + content pack + map tiles for home city.
+- **PWA** (shipped): adapter-static SPA (fallback index.html, GitHub Pages hedefi); service worker `src/service-worker.ts` SvelteKit 3 `$app/manifest` + `$app/env` ile build çıktısının TAMAMINI precache eder (cache-first + navigate fallback, sürüm bazlı cache temizliği); manifest.tr (standalone, 192/512 + maskable). Uçuş modu e2e: `npm run test:e2e` — GEÇTİ (2/2).
 - **Storage**: Dexie (IndexedDB). Single `planStore` + `sheetStore` + `settingsStore`. Export/import = encrypted JSON (WebCrypto AES-GCM, key derived from Aile Kodu).
 - **Scoring engine**: pure TS module `scorePlan(plan, sheets, drillLog) → {pct, categories[], checks[]}` — unit-tested, no I/O, reused by dashboard + plan detail.
 - **Aile Kodu**: 8-char Crockford-base32 code = family ID + share token; QR = `hazirplan.app/a/[payload]` URL. Import merges by `updatedAt` per entity.
@@ -169,7 +169,7 @@ No paywall in MVP. Monetization (Phase 2) deferred until waitlist + usage data j
 - 20 beta families build a full plan in <60 min unaided (timed test)
 - **Wizard save e2e test asserts the plan appears in Planlarım (their bug, our blocker)**
 - **Scoring engine: 100% unit coverage; score is identical across reloads/devices (pure function)**
-- Offline e2e: flight-mode walkthrough of full journey = release blocker
+- Offline e2e: flight-mode walkthrough of full journey = release blocker — **GÖRÜNDİ GEÇTİ (commit bf7ca7b)**: sıcak-chunk uçuş modu (2. plan sihirbazı → teyit → detay → paylaş → Aile Kodu → HPK1) + soğuk-offline precache kanıtı
 - Native-speaker copy sign-off (you review TR copy)
 - Lighthouse PWA ≥90; cold-start interactive <2s on mid-range Android
 
