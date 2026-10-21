@@ -1,6 +1,7 @@
 <script lang="ts">
   // HazırPlan — Karşılama / Dashboard (specs/mvp-spec.md §6.1)
   import { onMount } from 'svelte';
+  import { resolve } from '$app/paths';
   import pack from '../content/tr.json';
   import { db, getSettings } from '#lib/db/db';
   import type { ShareLogEntry } from '#lib/types';
@@ -8,6 +9,7 @@
   import { pickPrimaryPlan } from '#lib/scoring/primary';
   import type { Plan, Sheet, DrillEntry, FamilyLocation, Settings } from '#lib/types';
   import Wizard from '#lib/components/Wizard.svelte';
+  import LocationsCard from '#lib/components/LocationsCard.svelte';
 
   let plans = $state<Plan[]>([]);
   let sheets = $state<Sheet[]>([]);
@@ -68,7 +70,7 @@
   <header class="top">
     <h1>Hazır<span class="accent">Plan</span></h1>
     <span class="tagline">Plan, afetten önce var olmalı.</span>
-    <a class="aile" href="/aile" title="Aile Kodu">👨‍👩‍👧 Aile</a>
+    <a class="aile" href={resolve('aile')} title="Aile Kodu">👨‍👩‍👧 Aile</a>
   </header>
 
   <section class="grid">
@@ -100,7 +102,7 @@
         <ul>
           {#each plans as p (p.id)}
             <li class="plan">
-              <a href="/plan/{p.id}" class="planlink">
+              <a href={resolve('plan/[id]').replace('[id]', p.id)} class="planlink">
                 <strong>{p.title}</strong>
                 <span class="meta">
                   {p.steps.length} adım · {p.steps.filter((s) => s.done).length}/{p.steps.length} tamam
@@ -111,6 +113,10 @@
         </ul>
       {/if}
     </article>
+  </section>
+
+  <section class="grid">
+    <div class="span2"><LocationsCard /></div>
   </section>
 
   {#if wizardOpen}
@@ -132,6 +138,7 @@
   .aile { margin-left: auto; text-decoration: none; font-size: .9rem; color: #b45309;
     background: #fffbeb; border: 1px solid #fcd34d; border-radius: 999px; padding: 5px 14px; }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .span2 { grid-column: 1 / -1; }
   @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
   .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 20px; }
   .card h2 { margin: 0 0 12px; font-size: 1.05rem; }

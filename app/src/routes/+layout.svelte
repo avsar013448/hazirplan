@@ -2,6 +2,7 @@
 	import favicon from '#lib/assets/favicon.svg';
 	import { onMount } from 'svelte';
 	import { dev } from '$app/env';
+	import { asset, resolve } from '$app/paths';
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
@@ -10,7 +11,8 @@
 	// SvelteKit src/service-worker.ts dosyasını /service-worker.js olarak build eder.
 	onMount(() => {
 		if (!dev && 'serviceWorker' in navigator) {
-			navigator.serviceWorker.register('/service-worker.js').catch((e) => {
+			const root = resolve('/');
+			navigator.serviceWorker.register(`${root.endsWith('/') ? root : root + '/'}service-worker.js`).catch((e) => {
 				console.error('Service worker kaydedilemedi:', e);
 			});
 		}
@@ -19,7 +21,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<link rel="manifest" href="/manifest.webmanifest" />
+	<link rel="manifest" href={asset('manifest.webmanifest')} />
 	<meta name="theme-color" content="#f59e0b" />
 </svelte:head>
 

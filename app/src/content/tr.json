@@ -1,47 +1,162 @@
 {
   "locale": "tr",
   "hazards": [
-    { "id": "earthquake", "label": "Deprem", "emoji": "🌍", "description": "Yapısal hasar ve artçı sarsıntılar", "default": true },
-    { "id": "wildfire", "label": "Orman Yangını", "emoji": "🌲", "description": "Tahliye gerektiren hızlı yayılan yangınlar", "default": true },
-    { "id": "fire", "label": "Ev Yangını", "emoji": "🔥", "description": "Konut içinde çıkan yangınlar" },
-    { "id": "flood", "label": "Sel", "emoji": "🌊", "description": "Su baskını ve taşkın" },
-    { "id": "landslide", "label": "Heyelan", "emoji": "⛰️", "description": "Toprak kayması" },
-    { "id": "power_outage", "label": "Elektrik Kesintisi", "emoji": "⚡", "description": "Uzun süreli elektrik kesintileri" },
-    { "id": "other", "label": "Diğer", "emoji": "✍️", "description": "Kendiniz tanımlayın (0/50)" }
+    {
+      "id": "earthquake",
+      "label": "Deprem",
+      "emoji": "🌍",
+      "description": "Yapısal hasar ve artçı sarsıntılar",
+      "default": true
+    },
+    {
+      "id": "wildfire",
+      "label": "Orman Yangını",
+      "emoji": "🌲",
+      "description": "Tahliye gerektiren hızlı yayılan yangınlar",
+      "default": true
+    },
+    {
+      "id": "fire",
+      "label": "Ev Yangını",
+      "emoji": "🔥",
+      "description": "Konut içinde çıkan yangınlar"
+    },
+    {
+      "id": "flood",
+      "label": "Sel",
+      "emoji": "🌊",
+      "description": "Su baskını ve taşkın"
+    },
+    {
+      "id": "landslide",
+      "label": "Heyelan",
+      "emoji": "⛰️",
+      "description": "Toprak kayması"
+    },
+    {
+      "id": "power_outage",
+      "label": "Elektrik Kesintisi",
+      "emoji": "⚡",
+      "description": "Uzun süreli elektrik kesintileri"
+    },
+    {
+      "id": "other",
+      "label": "Diğer",
+      "emoji": "✍️",
+      "description": "Kendiniz tanımlayın (0/50)"
+    }
   ],
   "household": {
-    "sizeOptions": ["1 kişi", "2 kişi", "3 kişi", "4 kişi", "5 kişi", "5+"],
-    "homeTypes": ["apartman", "müstakil"],
+    "sizeOptions": [
+      "1 kişi",
+      "2 kişi",
+      "3 kişi",
+      "4 kişi",
+      "5 kişi",
+      "5+"
+    ],
+    "homeTypes": [
+      "apartman",
+      "müstakil"
+    ],
     "members": [
-      { "id": "children", "label": "Çocuk (0-18)" },
-      { "id": "elderly", "label": "Yaşlı (65+)" },
-      { "id": "pets", "label": "Evcil hayvan" },
-      { "id": "special_needs", "label": "Özel bakım ihtiyacı olan" }
+      {
+        "id": "children",
+        "label": "Çocuk (0-18)"
+      },
+      {
+        "id": "elderly",
+        "label": "Yaşlı (65+)"
+      },
+      {
+        "id": "pets",
+        "label": "Evcil hayvan"
+      },
+      {
+        "id": "special_needs",
+        "label": "Özel bakım ihtiyacı olan"
+      }
     ],
     "circumstances": [
-      { "id": "mobility", "label": "Hareket kısıtlılığı", "description": "Tekerlekli sandalye, yürüteç, zor hareket" },
-      { "id": "medical_equipment", "label": "Medikal cihaz", "description": "Oksijen, diyaliz veya diğer elektrikli cihazlar" },
-      { "id": "critical_meds", "label": "Kritik ilaçlar", "description": "Atlanamayan reçeteli ilaçlar" },
-      { "id": "no_vehicle", "label": "Araç yok", "description": "Toplu taşıma veya alternatif ulaşım" },
-      { "id": "remote", "label": "Uzak konum", "description": "Servisleri sınırlı kırsal bölge" }
+      {
+        "id": "mobility",
+        "label": "Hareket kısıtlılığı",
+        "description": "Tekerlekli sandalye, yürüteç, zor hareket"
+      },
+      {
+        "id": "medical_equipment",
+        "label": "Medikal cihaz",
+        "description": "Oksijen, diyaliz veya diğer elektrikli cihazlar"
+      },
+      {
+        "id": "critical_meds",
+        "label": "Kritik ilaçlar",
+        "description": "Atlanamayan reçeteli ilaçlar"
+      },
+      {
+        "id": "no_vehicle",
+        "label": "Araç yok",
+        "description": "Toplu taşıma veya alternatif ulaşım"
+      },
+      {
+        "id": "remote",
+        "label": "Uzak konum",
+        "description": "Servisleri sınırlı kırsal bölge"
+      }
     ]
   },
   "sheetSkeletons": {
     "deprem_cantasi": {
       "title": "Deprem Çantası",
       "items": [
-        { "name": "Su — içme suyu (kişi başı 3 gün × 2L)", "qty": 1 },
-        { "name": "Uzun ömürlü gıda (konserve/enerji barı)", "qty": 1 },
-        { "name": "İlk yardım seti", "qty": 1 },
-        { "name": "El feneri + yedek pil", "qty": 1 },
-        { "name": "Güç bankası + şarj kablosu", "qty": 1 },
-        { "name": "Islık", "qty": 1 },
-        { "name": "Toz maskesi", "qty": 1 },
-        { "name": "İş eldiveni", "qty": 1 },
-        { "name": "Kişisel ilaçlar (7 günlük yedek)", "qty": 1 },
-        { "name": "Önemli evrak kopyaları (kimlik, tapu, poliçe)", "qty": 1 },
-        { "name": "Nakit (küçük banknotlar)", "qty": 1 },
-        { "name": "Yedek anahtar + güçlü kalem ve kâğıt", "qty": 1 }
+        {
+          "name": "Su — içme suyu (kişi başı 3 gün × 2L)",
+          "qty": 1
+        },
+        {
+          "name": "Uzun ömürlü gıda (konserve/enerji barı)",
+          "qty": 1
+        },
+        {
+          "name": "İlk yardım seti",
+          "qty": 1
+        },
+        {
+          "name": "El feneri + yedek pil",
+          "qty": 1
+        },
+        {
+          "name": "Güç bankası + şarj kablosu",
+          "qty": 1
+        },
+        {
+          "name": "Islık",
+          "qty": 1
+        },
+        {
+          "name": "Toz maskesi",
+          "qty": 1
+        },
+        {
+          "name": "İş eldiveni",
+          "qty": 1
+        },
+        {
+          "name": "Kişisel ilaçlar (7 günlük yedek)",
+          "qty": 1
+        },
+        {
+          "name": "Önemli evrak kopyaları (kimlik, tapu, poliçe)",
+          "qty": 1
+        },
+        {
+          "name": "Nakit (küçük banknotlar)",
+          "qty": 1
+        },
+        {
+          "name": "Yedek anahtar + güçlü kalem ve kâğıt",
+          "qty": 1
+        }
       ]
     },
     "iletisim": {
@@ -55,16 +170,34 @@
       "title": "Tahliye Rotası",
       "destinations": [],
       "routeSteps": [
-        { "from": "Ev", "to": "Yakın buluşma noktası (yürüyüş mesafesi)" },
-        { "from": "Buluşma noktası", "to": "Toplanma alanı / güvenli adres" }
+        {
+          "from": "Ev",
+          "to": "Yakın buluşma noktası (yürüyüş mesafesi)"
+        },
+        {
+          "from": "Buluşma noktası",
+          "to": "Toplanma alanı / güvenli adres"
+        }
       ]
     },
     "acil_kisiler": {
       "title": "Acil Kişiler",
       "contacts": [
-        { "name": "Acil Çağrı Merkezi", "phone": "112", "relation": "kurum" },
-        { "name": "AFAD", "phone": "", "relation": "kurum" },
-        { "name": "Kızılay", "phone": "186", "relation": "kurum" }
+        {
+          "name": "Acil Çağrı Merkezi",
+          "phone": "112",
+          "relation": "kurum"
+        },
+        {
+          "name": "AFAD",
+          "phone": "",
+          "relation": "kurum"
+        },
+        {
+          "name": "Kızılay",
+          "phone": "186",
+          "relation": "kurum"
+        }
       ]
     }
   },
@@ -81,24 +214,43 @@
         {
           "title": "Sarsıntı durunca: gaz, elektrik, su kontrolü",
           "objective": "Evde sızıntı veya kısa devre varsa hemen kapatın.",
-          "checklist": ["Gaz vanasını kapat", "Elektrik sigortalarını indir", "Su ana vanasını kapat", "Sızıntı ve çatlak kontrolü yap"],
+          "checklist": [
+            "Gaz vanasını kapat",
+            "Elektrik sigortalarını indir",
+            "Su ana vanasını kapat",
+            "Sızıntı ve çatlak kontrolü yap"
+          ],
           "sheets": []
+        },
+        {
+          "title": "Envanteri ve su stokunu kontrol et",
+          "objective": "72 saat yetecek su ve temel malzemeler hazır olsun — envanteri işaretleyin.",
+          "sheets": [
+            "envanter"
+          ]
         },
         {
           "title": "Çantayı ve aileyi topla",
           "objective": "Deprem çantasını ve tüm aile üyelerini belirlenen noktada bir araya getirin.",
-          "sheets": ["deprem_cantasi"]
+          "sheets": [
+            "deprem_cantasi"
+          ]
         },
         {
           "title": "Binadan çık ve toplanma alanına git",
           "objective": "Asansör kullanmadan, düşen parçalardan uzak rotayla toplanma alanına gidin.",
           "notes": "Artçı sarsıntılar olabilir; hasarlı binaya geri girmeyin.",
-          "sheets": ["tahliye"]
+          "sheets": [
+            "tahliye"
+          ]
         },
         {
           "title": "Aileyle iletişim kur",
           "objective": "PACE planındaki yöntemlerle durumunuzu paylaşın; bölge dışı kontağa haber verin.",
-          "sheets": ["iletisim", "acil_kisiler"]
+          "sheets": [
+            "iletisim",
+            "acil_kisiler"
+          ]
         },
         {
           "title": "Durumu paylaş ve yardımı değerlendir",
@@ -113,19 +265,32 @@
         {
           "title": "Uyarı takibi: AFAD ve mahalle hattını kontrol et",
           "objective": "Yangın uyarı seviyesini düzenli olarak resmi kaynaklardan izleyin.",
-          "checklist": ["AFAD duyurularını takip et", "Mahalle/muhtar haber grubuna katıl", "Pil çapasıyla radyoyu hazırla"],
+          "checklist": [
+            "AFAD duyurularını takip et",
+            "Mahalle/muhtar haber grubuna katıl",
+            "Pil çapasıyla radyoyu hazırla"
+          ],
           "sheets": []
         },
         {
           "title": "\"Hazır\" seviyesi: evin çevresini ve çantayı hazırla",
           "objective": "Ev dışındaki yanıcı maddeleri uzaklaştırın; çantayı kapı yanına koyun.",
-          "checklist": ["Yanıcı maddeleri evden uzağa taşı", "Çatı ve oluklardaki kuru yaprakları temizle", "Çantayı kapı yanına koy"],
-          "sheets": ["deprem_cantasi"]
+          "checklist": [
+            "Yanıcı maddeleri evden uzağa taşı",
+            "Çatı ve oluklardaki kuru yaprakları temizle",
+            "Çantayı kapı yanına koy"
+          ],
+          "sheets": [
+            "deprem_cantasi",
+            "envanter"
+          ]
         },
         {
           "title": "\"Bekle\" seviyesi: herkes hazır, rota net",
           "objective": "Aile buluşma noktasında; araç yakıt dolu; alternatif rota belli.",
-          "sheets": ["tahliye"]
+          "sheets": [
+            "tahliye"
+          ]
         },
         {
           "title": "\"Tahliye\" seviyesi: buluşma noktasına hareket",
@@ -136,59 +301,178 @@
         {
           "title": "İletişim: aile ve mahalle hattı",
           "objective": "Durumunuzu paylaşın; mahalle koordinasyonunu takip edin.",
-          "sheets": ["iletisim", "acil_kisiler"]
+          "sheets": [
+            "iletisim",
+            "acil_kisiler"
+          ]
         }
       ]
     },
     "fire": {
       "title": "Ev Yangını Planı",
       "steps": [
-        { "title": "Yangın anında: çık ve 112'yi ara", "objective": "Kapıyı kapatın, alçak pozisyonda çıkış yapın, dışarıdan 112'yi arayın.", "sheets": ["acil_kisiler"] },
-        { "title": "Toplanma noktasında buluş", "objective": "Ev önündeki belirlenmiş güvenli noktada aileyle buluşun.", "sheets": ["tahliye"] },
-        { "title": "İçeri asla geri girmeyin", "objective": "Kimse/evrak için geri girmeyin; itfaiyeye haber verin.", "sheets": [] }
+        {
+          "title": "Yangın anında: çık ve 112'yi ara",
+          "objective": "Kapıyı kapatın, alçak pozisyonda çıkış yapın, dışarıdan 112'yi arayın.",
+          "sheets": [
+            "acil_kisiler"
+          ]
+        },
+        {
+          "title": "Toplanma noktasında buluş",
+          "objective": "Ev önündeki belirlenmiş güvenli noktada aileyle buluşun.",
+          "sheets": [
+            "tahliye"
+          ]
+        },
+        {
+          "title": "İçeri asla geri girmeyin",
+          "objective": "Kimse/evrak için geri girmeyin; itfaiyeye haber verin.",
+          "sheets": []
+        }
       ]
     },
     "flood": {
       "title": "Sel Planı",
       "steps": [
-        { "title": "Yükselen suyu izle, elektrikle su temasından uzak dur", "objective": "Şebeke güvenliği ve tahliye zamanlaması.", "sheets": [] },
-        { "title": "Değerlileri üst kata taşı, çantayı hazırla", "objective": "Su seviyesi yükselirse kaybı en aza indirin.", "sheets": ["deprem_cantasi"] },
-        { "title": "Tahliye: su basmayan rotayla çık", "objective": "Araçla geçilemez yollardan kaçının; belirlenmiş rotayı kullanın.", "sheets": ["tahliye"] },
-        { "title": "İletişim ve haber verme", "objective": "Bölge dışı kontağa ve yakınlarınıza durum bildirin.", "sheets": ["iletisim", "acil_kisiler"] }
+        {
+          "title": "Yükselen suyu izle, elektrikle su temasından uzak dur",
+          "objective": "Şebeke güvenliği ve tahliye zamanlaması.",
+          "sheets": []
+        },
+        {
+          "title": "Değerlileri üst kata taşı, çantayı hazırla",
+          "objective": "Su seviyesi yükselirse kaybı en aza indirin.",
+          "sheets": [
+            "deprem_cantasi"
+          ]
+        },
+        {
+          "title": "Tahliye: su basmayan rotayla çık",
+          "objective": "Araçla geçilemez yollardan kaçının; belirlenmiş rotayı kullanın.",
+          "sheets": [
+            "tahliye"
+          ]
+        },
+        {
+          "title": "İletişim ve haber verme",
+          "objective": "Bölge dışı kontağa ve yakınlarınıza durum bildirin.",
+          "sheets": [
+            "iletisim",
+            "acil_kisiler"
+          ]
+        }
       ]
     },
     "landslide": {
       "title": "Heyelan Planı",
       "steps": [
-        { "title": "Çatlak ve eğim değişimlerini izle", "objective": "Heyelan öncü belirtilerini tanıyın.", "sheets": [] },
-        { "title": "Sıcak yamaçtan uzaklaş, tahliye noktasına git", "objective": "Yamaç altındaki yapıları hemen terk edin.", "sheets": ["tahliye"] },
-        { "title": "İletişim ve haber verme", "objective": "Komşuları ve yetkilileri uyarın; 112'ye bildirin.", "sheets": ["iletisim", "acil_kisiler"] }
+        {
+          "title": "Çatlak ve eğim değişimlerini izle",
+          "objective": "Heyelan öncü belirtilerini tanıyın.",
+          "sheets": []
+        },
+        {
+          "title": "Sıcak yamaçtan uzaklaş, tahliye noktasına git",
+          "objective": "Yamaç altındaki yapıları hemen terk edin.",
+          "sheets": [
+            "tahliye"
+          ]
+        },
+        {
+          "title": "İletişim ve haber verme",
+          "objective": "Komşuları ve yetkilileri uyarın; 112'ye bildirin.",
+          "sheets": [
+            "iletisim",
+            "acil_kisiler"
+          ]
+        }
       ]
     },
     "power_outage": {
       "title": "Elektrik Kesintisi Planı",
       "steps": [
-        { "title": "Fener ve güç bankasını hazır et", "objective": "Mum yerine fener; telefon şarjını planlayın.", "sheets": ["deprem_cantasi"] },
-        { "title": "Besin güvenliği: buzdolabı kapağını kapalı tut", "objective": "Kesintide gıda güvenliğini koruyun (4 saat kuralı).", "sheets": [] },
-        { "title": "Medikal cihaz varsa yedek gücü kontrol et", "objective": "Elektrikli medikal cihazlar için yedek plan (jeneratör/hastane).", "sheets": [] },
-        { "title": "İletişim ve bilgilendirme", "objective": "Elektrik şirketine bildirim; aileye durum bildirimi.", "sheets": ["iletisim", "acil_kisiler"] }
+        {
+          "title": "Fener ve güç bankasını hazır et",
+          "objective": "Mum yerine fener; telefon şarjını planlayın.",
+          "sheets": [
+            "deprem_cantasi"
+          ]
+        },
+        {
+          "title": "Besin güvenliği: buzdolabı kapağını kapalı tut",
+          "objective": "Kesintide gıda güvenliğini koruyun (4 saat kuralı).",
+          "sheets": []
+        },
+        {
+          "title": "Medikal cihaz varsa yedek gücü kontrol et",
+          "objective": "Elektrikli medikal cihazlar için yedek plan (jeneratör/hastane).",
+          "sheets": []
+        },
+        {
+          "title": "İletişim ve bilgilendirme",
+          "objective": "Elektrik şirketine bildirim; aileye durum bildirimi.",
+          "sheets": [
+            "iletisim",
+            "acil_kisiler"
+          ]
+        }
       ]
     },
     "other": {
       "title": "Acil Durum Planı",
       "steps": [
-        { "title": "Riski tanımla ve güvenli alanı belirle", "objective": "Tehlikeye özel güvenli davranışı tanımlayın.", "sheets": [] },
-        { "title": "Çantayı ve iletişimi hazırla", "objective": "Temel hazırlık: çanta + PACE iletişim.", "sheets": ["deprem_cantasi", "iletisim", "acil_kisiler"] },
-        { "title": "Tahliye rotası belirle", "objective": "Gerekirse hızla çıkabileceğiniz rota.", "sheets": ["tahliye"] }
+        {
+          "title": "Riski tanımla ve güvenli alanı belirle",
+          "objective": "Tehlikeye özel güvenli davranışı tanımlayın.",
+          "sheets": []
+        },
+        {
+          "title": "Çantayı ve iletişimi hazırla",
+          "objective": "Temel hazırlık: çanta + PACE iletişim.",
+          "sheets": [
+            "deprem_cantasi",
+            "envanter",
+            "iletisim",
+            "acil_kisiler"
+          ]
+        },
+        {
+          "title": "Tahliye rotası belirle",
+          "objective": "Gerekirse hızla çıkabileceğiniz rota.",
+          "sheets": [
+            "tahliye"
+          ]
+        }
       ]
     }
   },
   "circumstanceSteps": {
-    "critical_meds": { "afterSheet": "deprem_cantasi", "title": "Kritik ilaçları ve reçeteleri al", "objective": "7 günlük ilaç yedeği ve reçete kopyalarını çantaya ekleyin." },
-    "medical_equipment": { "afterSheet": "deprem_cantasi", "title": "Medikal cihaz planı", "objective": "Cihazın yedek güç kaynağını ve taşınabilir alternatifini doğrulayın; ihtiyaç halinde hastane planı." },
-    "no_vehicle": { "afterSheet": "tahliye", "title": "Toplu taşıma / yürüyüş planı", "objective": "Araç yoksa: otobüs/metro güzergâhı veya yürüyüş rotası ve buluşma noktası." },
-    "mobility": { "afterSheet": "tahliye", "title": "Kim, kime yardım ediyor?", "objective": "Hareket kısıtlılığı olan kişi için sorumlu kişi ve taşım/destek planı yazın." },
-    "pets": { "afterSheet": "deprem_cantasi", "title": "Evcil hayvan planı", "objective": "Taşıma kafesi, mama ve suyu çantaya ekleyin; hayvanla kabul eden toplanma noktası belirleyin." }
+    "critical_meds": {
+      "afterSheet": "deprem_cantasi",
+      "title": "Kritik ilaçları ve reçeteleri al",
+      "objective": "7 günlük ilaç yedeği ve reçete kopyalarını çantaya ekleyin."
+    },
+    "medical_equipment": {
+      "afterSheet": "deprem_cantasi",
+      "title": "Medikal cihaz planı",
+      "objective": "Cihazın yedek güç kaynağını ve taşınabilir alternatifini doğrulayın; ihtiyaç halinde hastane planı."
+    },
+    "no_vehicle": {
+      "afterSheet": "tahliye",
+      "title": "Toplu taşıma / yürüyüş planı",
+      "objective": "Araç yoksa: otobüs/metro güzergâhı veya yürüyüş rotası ve buluşma noktası."
+    },
+    "mobility": {
+      "afterSheet": "tahliye",
+      "title": "Kim, kime yardım ediyor?",
+      "objective": "Hareket kısıtlılığı olan kişi için sorumlu kişi ve taşım/destek planı yazın."
+    },
+    "pets": {
+      "afterSheet": "deprem_cantasi",
+      "title": "Evcil hayvan planı",
+      "objective": "Taşıma kafesi, mama ve suyu çantaya ekleyin; hayvanla kabul eden toplanma noktası belirleyin."
+    }
   },
   "dependentStep": {
     "title": "Kim, kime yardım ediyor?",

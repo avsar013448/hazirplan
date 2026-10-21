@@ -47,10 +47,10 @@ describe('Wizard — save path', () => {
     const planCount = await db.plans.count();
     const sheetCount = await db.sheets.count();
     expect(planCount).toBe(1);
-    expect(sheetCount).toBe(4); // çanta + tahliye + iletişim + acil kişiler
+    expect(sheetCount).toBe(5); // çanta + envanter + tahliye + iletişim + acil kişiler
     const saved = await db.plans.toArray();
     expect(saved[0].title).toBe('Deprem Planı');
-    expect(saved[0].steps).toHaveLength(6);
+    expect(saved[0].steps).toHaveLength(7); // 6 şablon + envanter
   });
 
   it('calls onsaved on save, onclose only on Tamam (confirmation stays visible)', async () => {

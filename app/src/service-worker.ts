@@ -4,13 +4,15 @@
 /// <reference lib="webworker" />
 
 import { immutable, assets } from '$app/manifest';
+// SW bağlamında $app/paths güvenli değil — scope'tan türet ('/hazirplan/' ya da '/')
+const BASE = new URL(self.registration.scope).pathname.replace(/\/$/, '') || '/';
 import { version } from '$app/env';
 
 const CACHE = `hazirplan-${version}`;
 const ASSETS: string[] = [
   ...(immutable as { path: string }[]).map((a) => a.path),
   ...(assets as { path: string }[]).map((a) => a.path),
-  '/',  // SPA kökü — vite preview '/index.html'e 404 verir, önbelleğe '/' girilir
+  BASE, // SPA kökü (base'iyle) — vite preview '/index.html'e 404 verir
 ];
 
 self.addEventListener('install', (event) => {
@@ -38,7 +40,7 @@ self.addEventListener('fetch', (event) => {
       if (cached) return cached;
       // navigasyonlar için fallback (SPA route'ları offline'da da açılır)
       if (event.request.mode === 'navigate') {
-        return caches.match('/').then((fb) => fb ?? fetch(event.request));
+        return caches.match(BASE).then((fb) => fb ?? fetch(event.request));
       }
       return fetch(event.request).then((res) => {
         const copy = res.clone();

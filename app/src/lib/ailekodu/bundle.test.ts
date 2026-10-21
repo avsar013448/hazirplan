@@ -34,7 +34,7 @@ describe('Aile verisi — LWW birleştirme', () => {
     const bundle = await exportFamilyBundle();
     expect(bundle.v).toBe(1);
     expect(bundle.plans).toHaveLength(1);
-    expect(bundle.sheets).toHaveLength(4);
+    expect(bundle.sheets).toHaveLength(5); // çanta+envanter+tahliye+iletişim+acil kişiler
     expect(bundle.settings.id).toBe('app');
     expect(bundle.exportedAt).toBeGreaterThan(0);
   });

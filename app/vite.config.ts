@@ -5,6 +5,9 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	plugins: [
 		sveltekit({
+			// GitHub Pages proje sitesi: /hazirplan altında servis (deploy build'i
+			// PUBLIC_BASE_PATH ile kurar; lokal dev/test kökte kalır)
+			paths: { base: (process.env.PUBLIC_BASE_PATH ?? '') as '' | `/${string}` },
 			compilerOptions: {
 				// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
 				runes: ({ filename }) =>

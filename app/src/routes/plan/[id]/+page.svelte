@@ -1,10 +1,10 @@
 <script lang="ts">
-  // /plan/[id] — route entry, takes the id from the URL
+  import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import PlanDetail from '#lib/components/PlanDetail.svelte';
 </script>
 
-<a href="/" class="back">← Planlar</a>
+<a href={resolve('/')} class="back">← Planlar</a>
 <PlanDetail planId={page.params.id ?? ''} />
 
 <style>

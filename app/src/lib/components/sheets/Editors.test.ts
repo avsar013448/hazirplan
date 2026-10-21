@@ -69,7 +69,7 @@ describe('PlanDetail — Mark Complete', () => {
 
     const { container } = render(PlanDetail, { props: { planId } });
     await waitFor(() => expect(container.textContent).toContain('Deprem Planı'));
-    expect(container.textContent).toContain('0/6 adım tamam');
+    expect(container.textContent).toContain('0/7 adım tamam');
 
     // ilk adımı tamamla
     const stepBtn = container.querySelector('.stephead')!;
@@ -79,7 +79,7 @@ describe('PlanDetail — Mark Complete', () => {
       const stored = await db.plans.get(planId);
       expect(stored?.steps[0].done).toBe(true);
     });
-    await waitFor(() => expect(container.textContent).toContain('1/6 adım tamam'));
+    await waitFor(() => expect(container.textContent).toContain('1/7 adım tamam'));
   });
 
   it('opens a linked sheet editor from the accordion', async () => {

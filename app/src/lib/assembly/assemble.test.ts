@@ -17,13 +17,13 @@ describe('assemblePlan — deterministic template assembly', () => {
   it('earthquake template builds 6 steps with linked sheets', () => {
     const { plan, sheets } = assemblePlan(baseAnswers, pack as never, opts);
     expect(plan.title).toBe('Deprem Planı');
-    // 6 şablon adımı + 1 bağımlı üye adımı (fixture'da çocuk var)
-    expect(plan.steps).toHaveLength(7);
-    expect(plan.steps.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7]);
-    // çanta, tahliye, iletisim, acil_kisiler sheets created + linked
+    // 7 şablon adımı + 1 bağımlı üye adımı (fixture'da çocuk var)
+    expect(plan.steps).toHaveLength(8);
+    expect(plan.steps.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    // çanta, envanter, tahliye, iletisim, acil_kisiler sheets created + linked
     const types = sheets.map((s) => s.type).sort();
-    expect(types).toEqual(['acil_kisiler', 'deprem_cantasi', 'iletisim', 'tahliye']);
-    const cantasi = plan.steps[2]; // "Çantayı ve aileyi topla"
+    expect(types).toEqual(['acil_kisiler', 'deprem_cantasi', 'envanter', 'iletisim', 'tahliye']);
+    const cantasi = plan.steps[3]; // "Çantayı ve aileyi topla" (envanter adımı öncesinde)
     expect(cantasi.sheetRefs).toHaveLength(1);
     expect(sheets.find((s) => s.id === cantasi.sheetRefs[0])?.type).toBe('deprem_cantasi');
     // çanta skeleton has the 12 curated items
@@ -32,6 +32,10 @@ describe('assemblePlan — deterministic template assembly', () => {
     // household + members carried through
     expect(plan.household.size).toBe(4);
     expect(plan.household.members[0].role).toBe('çocuk');
+    // envanter sheet bağlı mı (su_72s + envanter_doluluk skor kontrolleri artık
+    // sihirbaz üzerinden üretilebilir — deploy-readiness fix)
+    const envanterStep = plan.steps.find((s) => s.title.includes('Envanteri'));
+    expect(envanterStep).toBeTruthy();
   });
 
   it('wildfire template uses Hazır/Bekle/Tahliye phased structure', () => {

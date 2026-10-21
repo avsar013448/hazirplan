@@ -5,6 +5,7 @@
   import type { Plan, Sheet, ShareKind, ShareLogEntry } from '../types';
   import { logShare } from '../db/db';
   import { buildShareText, shareKindLabel } from '../shareText';
+  import { resolve } from '$app/paths';
 
   let { plan, sheets, onclose }: { plan: Plan; sheets: Sheet[]; onclose?: () => void } = $props();
 
@@ -58,7 +59,7 @@
   async function doPrint() {
     // printedCopy artık misafir sayfasındaki GERÇEK afterprint eyleminden gelir
     // (code-review-2: niyet değil eylem) — burada sadece paylaşım kaydedilir
-    if (!openTab(`/plan/${plan.id}/misafir`)) return;
+    if (!openTab(resolve('plan/[id]/misafir').replace('[id]', plan.id))) return;
     await record('print');
   }
 
@@ -92,7 +93,7 @@
   }
 
   function doGuestView() {
-    if (!openTab(`/plan/${plan.id}/misafir`)) return;
+    if (!openTab(resolve('plan/[id]/misafir').replace('[id]', plan.id))) return;
     record('guest');
   }
 </script>
