@@ -111,7 +111,10 @@ Her kontrol: **durum** (*"Planlanmadı"* = konu planda hiç geçmiyor / *"Başar
 - *"Bir Cumartesi seçin. Planın iletişim kısmını baştan sona çalıştırın. Bozuk bir şey mutlaka bulacaksınız. Onu düzeltin."*
 - *"Kişi listesini yazdırın. Bir kopyası çantaya, biri buzdolabına, biri de araca."*
 
-### 5.4 Documented decisions (code-review-1)
+### 5.4 Documented decisions (code-review-1 + code-review-2)
+- **3-plan limiti yalnızca sihirbaz OLUŞTURMAYA uygulanır** — Aile Kodu içe aktarma senkronizasyondur, aile verisini asla kırpamaz (veri bütünlüğü > ürün limiti).
+- **Skor birincil planı = en son OLUŞTURULAN plan (createdAt)** — düzenlemeler (Mark Complete, updatedAt churn) birincil planı değiştirmez.
+- **printedCopy yalnızca GERÇEK afterprint eyleminden gelir** (misafir sayfası); print görünümü açmak yetmez.
 - Drill attribution **per-plan** (`drillLog.planId`).
 - Same-type sheet scoring: **first sheet in `plan.sheetIds` order**.
 - Boolean settings false = **"Başarısız"** (explicit no); absent topic = "Planlanmadı".
