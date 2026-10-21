@@ -23,7 +23,7 @@ function fixture() {
 describe('ShareDialog — komşu/arkadaş/misafir/grup paylaşımı', () => {
   it('WhatsApp action logs a share with the selected recipient', async () => {
     const built = fixture();
-    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => ({}) as unknown as Window);
     const { container } = render(ShareDialog, {
       props: { plan: built.plan, sheets: built.sheets, onclose: () => {} },
     });
@@ -50,7 +50,7 @@ describe('ShareDialog — komşu/arkadaş/misafir/grup paylaşımı', () => {
 
   it('changing recipient kind is respected (Grup)', async () => {
     const built = fixture();
-    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => ({}) as unknown as Window);
     const { container } = render(ShareDialog, { props: { plan: built.plan, sheets: built.sheets } });
 
     const grupBtn = [...container.querySelectorAll('button.kind')].find((b) => (b.textContent ?? '').includes('Grup'))!;
@@ -66,19 +66,34 @@ describe('ShareDialog — komşu/arkadaş/misafir/grup paylaşımı', () => {
     openSpy.mockRestore();
   });
 
-  it('print action sets settings.printedCopy = true (real data for the score)', async () => {
+  it('popup blocked (window.open null) → share is NOT logged, error shown', async () => {
     const built = fixture();
     const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+    const { container } = render(ShareDialog, { props: { plan: built.plan, sheets: built.sheets } });
+
+    await fireEvent.click([...container.querySelectorAll('button')].find((b) => (b.textContent ?? '').includes('WhatsApp'))!);
+    await new Promise((r) => setTimeout(r, 50));
+
+    expect(container.textContent).toContain('Açılır pencere engellendi');
+    expect(await db.shareLog.count()).toBe(0); // sahte paylaşum kaydı YOK
+    openSpy.mockRestore();
+  });
+
+  it('print action logs the share; printedCopy itself now comes from the real afterprint (misafir page)', async () => {
+    const built = fixture();
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => ({}) as unknown as Window);
     const { container } = render(ShareDialog, { props: { plan: built.plan, sheets: built.sheets } });
 
     await fireEvent.click([...container.querySelectorAll('button')].find((b) => (b.textContent ?? '').startsWith('🖨️'))!);
 
     await waitFor(async () => {
-      const s = await getSettings();
-      expect(s.printedCopy).toBe(true);
       const log = await db.shareLog.toArray();
       expect(log[0].method).toBe('print');
     });
+    // printedCopy HENÜZ false — misafir sayfasında window.print() çalışınca
+    // afterprint ile true olur (niyet değil eylem — code-review-2)
+    const s = await getSettings();
+    expect(s.printedCopy).toBe(false);
     expect(openSpy).toHaveBeenCalledWith(`/plan/${built.plan.id}/misafir`, '_blank');
     openSpy.mockRestore();
   });

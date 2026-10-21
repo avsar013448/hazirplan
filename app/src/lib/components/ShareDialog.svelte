@@ -3,7 +3,7 @@
   // Her EYLEM shareLog'a yazılır; Hazırlık Skoru'nun 'aile dışı haberdar'
   // kontrolü bu gerçek veriden okur (settings checkbox'ı değil).
   import type { Plan, Sheet, ShareKind, ShareLogEntry } from '../types';
-  import { db, logShare, updateSettings } from '../db/db';
+  import { logShare } from '../db/db';
   import { buildShareText, shareKindLabel } from '../shareText';
 
   let { plan, sheets, onclose }: { plan: Plan; sheets: Sheet[]; onclose?: () => void } = $props();
@@ -45,10 +45,20 @@
     }
   }
 
+  function openTab(url: string): boolean {
+    // popup engellendiğinde window.open null döner — kayıt YAPMA, uyar (review-2)
+    const w = window.open(url, '_blank');
+    if (!w) {
+      error = 'Açılır pencere engellendi — tarayıcı ayarlarından izin verin ya da bağlantıyı elle açın.';
+      return false;
+    }
+    return true;
+  }
+
   async function doPrint() {
-    window.open(`/plan/${plan.id}/misafir`, '_blank');
-    // Yazdırılan kopya = gerçek veri: settings.printedCopy artık otomatik doğru
-    await updateSettings({ printedCopy: true });
+    // printedCopy artık misafir sayfasındaki GERÇEK afterprint eyleminden gelir
+    // (code-review-2: niyet değil eylem) — burada sadece paylaşım kaydedilir
+    if (!openTab(`/plan/${plan.id}/misafir`)) return;
     await record('print');
   }
 
@@ -61,7 +71,9 @@
         await navigator.clipboard.writeText(text);
         method = 'clipboard';
       } else {
-        method = 'clipboard';
+        // teslimat kanalı yoksa kayıt da YOK — sahte paylaşım saymayız
+        error = 'Paylaşım kanalı bulunamadı — metni kopyalayıp elle gönderin.';
+        return;
       }
       await record(method);
     } catch (e) {
@@ -75,12 +87,12 @@
 
   async function doWhatsApp() {
     const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
+    if (!openTab(url)) return;
     await record('whatsapp');
   }
 
   function doGuestView() {
-    window.open(`/plan/${plan.id}/misafir`, '_blank');
+    if (!openTab(`/plan/${plan.id}/misafir`)) return;
     record('guest');
   }
 </script>

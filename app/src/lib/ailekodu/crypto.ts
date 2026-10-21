@@ -60,15 +60,17 @@ export async function decryptBundle(payload: string, code: string): Promise<unkn
     throw new Error('Biçim geçersiz: bu bir HazırPlan aile verisi değil (HPK1 zarfı bekleniyor).');
   }
   const [, saltB, ivB, ctB] = parts;
-  const key = await deriveKey(code, unb64(saltB));
   try {
+    // bozuk salt/iv base64'si de dostane mesajla sonuçlanmalı (code-review-2)
+    const key = await deriveKey(code, unb64(saltB));
     const plain = await crypto.subtle.decrypt(
       { name: 'AES-GCM', iv: unb64(ivB) as unknown as BufferSource },
       key,
       unb64(ctB) as unknown as BufferSource,
     );
     return JSON.parse(new TextDecoder().decode(plain));
-  } catch {
+  } catch (e) {
+    if (e instanceof Error && e.message.includes('Biçim geçersiz')) throw e;
     throw new Error('Aile Kodu hatalı ya da veri bozuk — çözülemedi.');
   }
 }

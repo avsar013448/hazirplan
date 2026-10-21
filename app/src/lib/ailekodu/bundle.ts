@@ -27,20 +27,30 @@ export interface MergeReport {
 export async function exportFamilyBundle(): Promise<FamilyBundle> {
   const [plans, sheets, locations, drillLog, shareLog, settings] = await Promise.all([
     db.plans.toArray(), db.sheets.toArray(), db.locations.toArray(),
-    db.drillLog.toArray(), db.shareLog.toArray(), getSettings(),
+    db.drills.toArray(), db.shareLog.toArray(), getSettings(),
   ]);
   return { v: 1, exportedAt: Date.now(), plans, sheets, locations, drillLog, shareLog, settings };
 }
 
 function assertBundle(x: unknown): FamilyBundle {
   const b = x as FamilyBundle;
-  if (!b || b.v !== 1 || !Array.isArray(b.plans) || !Array.isArray(b.sheets)) {
-    throw new Error('Paket içeriği tanınamadı — lütfen dışa aktarılan aile verisini kullanın.');
-  }
+  const bad = (why: string) => new Error(`Paket eksik/bozuk: ${why} — lütfen dışa aktarılan aile verisini kullanın.`);
+  if (!b || typeof b !== 'object') throw bad('paket boş');
+  if (b.v !== 1) throw bad('sürüm uyuşmuyor');
+  if (!Array.isArray(b.plans)) throw bad('plans listesi yok');
+  if (!Array.isArray(b.sheets)) throw bad('sheets listesi yok');
+  // code-review-2: eksik diziler ham TypeError üretiyordu — hepsi doğrula
+  if (!Array.isArray(b.locations)) throw bad('locations listesi yok');
+  if (!Array.isArray(b.drillLog)) throw bad('drillLog listesi yok');
+  if (!Array.isArray(b.shareLog)) throw bad('shareLog listesi yok');
+  if (!b.settings || typeof b.settings !== 'object') throw bad('settings bölümü yok');
   return b;
 }
 
 export async function importFamilyBundle(raw: unknown): Promise<MergeReport> {
+  // NOT (karar): 3-plan ücretsiz limiti SADECE sihirbazdaki plan OLUŞTURMAYA
+  // uygulanır (specs §8). Aile içe aktarma senkronizasyondur — veri bütünlüğü
+  // ürün limitinden önce gelir; gelen paketeki planlar asla kırpılmaz/ezilmez.
   const b = assertBundle(raw);
   const report: MergeReport = {
     plansAdded: 0, plansUpdated: 0, sheetsAdded: 0, sheetsUpdated: 0,
@@ -48,7 +58,7 @@ export async function importFamilyBundle(raw: unknown): Promise<MergeReport> {
     settingsUpdated: false,
   };
 
-  await db.transaction('rw', [db.plans, db.sheets, db.locations, db.drillLog, db.shareLog, db.settings], async () => {
+  await db.transaction('rw', [db.plans, db.sheets, db.locations, db.drills, db.shareLog, db.settings], async () => {
     // plans — LWW
     for (const inc of b.plans) {
       const cur = await db.plans.get(inc.id);
@@ -71,8 +81,8 @@ export async function importFamilyBundle(raw: unknown): Promise<MergeReport> {
     }
     // drillLog / shareLog — id birleşimi (girdiler değişmez)
     for (const inc of b.drillLog) {
-      const cur = await db.drillLog.get(inc.id);
-      if (!cur) { await db.drillLog.put(inc); report.drillsAdded++; }
+      const cur = await db.drills.get(inc.id);
+      if (!cur) { await db.drills.put(inc); report.drillsAdded++; }
     }
     for (const inc of b.shareLog) {
       const cur = await db.shareLog.get(inc.id);

@@ -11,7 +11,7 @@ const ids = (() => { let n = 0; return () => `m-${++n}`; })();
 
 beforeEach(async () => {
   await Promise.all([db.plans.clear(), db.sheets.clear(), db.locations.clear(),
-    db.drillLog.clear(), db.shareLog.clear(), db.settings.clear()]);
+    db.drills.clear(), db.shareLog.clear(), db.settings.clear()]);
 });
 
 function planFixture(title: string, updatedAt: number): { plan: Plan; sheets: Sheet[] } {
@@ -110,12 +110,53 @@ describe('Aile verisi — LWW birleştirme', () => {
     };
     await importFamilyBundle(bundle);
     await importFamilyBundle(bundle); // ikinci kez — çoğalmasın
-    expect(await db.drillLog.count()).toBe(1);
+    expect(await db.drills.count()).toBe(1);
     expect(await db.shareLog.count()).toBe(1);
   });
 
   it('rejects malformed bundles loudly', async () => {
-    await expect(importFamilyBundle({ v: 9, plans: [] })).rejects.toThrow(/tanınamadı|HPK1/);
+    await expect(importFamilyBundle({ v: 9, plans: [] })).rejects.toThrow(/tanınamadı|HPK1|eksik|bozuk/);
     await expect(importFamilyBundle(null)).rejects.toThrow();
+  });
+
+  it('v:1 bundle with MISSING arrays/settings is rejected with a clear message', async () => {
+    const s = await getSettings();
+    const partial = { v: 1 as const, plans: [], sheets: [], settings: s };
+    // @ts-expect-error — bilinçli bozuk paket
+    await expect(importFamilyBundle(partial)).rejects.toThrow(/locations listesi yok/);
+    // @ts-expect-error
+    await expect(importFamilyBundle({ v: 1, plans: [], sheets: [], locations: [], drillLog: [], shareLog: [] }))
+      .rejects.toThrow(/settings bölümü yok/);
+  });
+
+  it('locations: add-only is the documented behavior (no updatedAt writer yet)', async () => {
+    const s = await getSettings();
+    const loc = { id: 'L1', name: 'Okul bahçesi', type: 'rally' as const, lat: 0, lng: 0 };
+    // 1) ekle
+    await importFamilyBundle({ v: 1 as const, exportedAt: 1, plans: [], sheets: [],
+      locations: [loc], drillLog: [], shareLog: [], settings: { ...s, updatedAt: 1 } });
+    expect(await db.locations.count()).toBe(1);
+    // 2) aynı id'li "düzenleme" (updatedAt alanı yok) → MEVCUT kalır (add-only),
+    //    veri KAYBOLMAZ — updatedAt'li locations UI'sı gelince LWW devreye girer
+    const edited = { ...loc, name: 'Değiştirilmiş ad' };
+    await importFamilyBundle({ v: 1 as const, exportedAt: 2, plans: [], sheets: [],
+      locations: [edited], drillLog: [], shareLog: [], settings: { ...s, updatedAt: 1 } });
+    expect(await db.locations.count()).toBe(1);
+    const stored = await db.locations.get('L1');
+    expect(stored?.name).toBe('Okul bahçesi');
+  });
+
+  it('DOCUMENTED DECISION: import can exceed the 3-plan wizard cap — sync integrity first', async () => {
+    // karar (specs §5.4 + bundle.ts NOT): limit yalnızca sihirbaz OLUŞTURMAYA
+    // uygulanır; aile senkronizasyonu veri kırmaz. Bu test davranışı sabitler.
+    const s = await getSettings();
+    for (let i = 0; i < 3; i++) {
+      const built = planFixture(`Yerel ${i}`, 1000 + i);
+      await db.plans.put(built.plan);
+    }
+    const extra = planFixture('Gelen Plan', 5000);
+    await importFamilyBundle({ v: 1 as const, exportedAt: 2, plans: [extra.plan], sheets: [],
+      locations: [], drillLog: [], shareLog: [], settings: { ...s, updatedAt: 1 } });
+    expect(await db.plans.count()).toBe(4); // 4. plan geldi — kırpılmadı
   });
 });

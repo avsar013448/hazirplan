@@ -6,14 +6,19 @@ export class HazirPlanDB extends Dexie {
   plans!: Table<Plan, string>;
   sheets!: Table<Sheet, string>;
   locations!: Table<FamilyLocation, string>;
-  drillLog!: Table<DrillEntry, string>;
+  drills!: Table<DrillEntry, string>;
   shareLog!: Table<ShareLogEntry, string>;
   settings!: Table<Settings, string>;
 
   constructor() {
     super('hazirplan');
-    // v2: drillLog client UUID'ye geçti ('++id' cihazlar arası divergent key üretir,
-    // last-write-wins merge'i imkânsız kılar — code-review-1 fix)
+    // v1 (shipped): drillLog '++id' auto-increment — cihazlar arası divergent key,
+    // LWW merge imkânsız (code-review-1 bulgusu). DEXIE PRIMARY KEY DEĞİŞTİRMEYİ
+    // REDDEDER ("Not yet support for changing primary key") — eski v1 kurulumlarda
+    // açılış ÇÖKERTİYORDU (code-review-2 P0, migration.test.ts ile kanıtlı).
+    // Doğru yol: yeni 'drills' store (client UUID) + upgrade'te veri taşıma,
+    // ardından v3'te legacy drillLog tablosunu düşürmek (Dexie'de şemadan
+    // çıkarılan store silinir — taşıma bittiği için güvenli).
     this.version(1).stores({
       plans: 'id, hazard, updatedAt',
       sheets: 'id, type, updatedAt',
@@ -21,20 +26,35 @@ export class HazirPlanDB extends Dexie {
       drillLog: '++id, planId, date',
       settings: 'id',
     });
-    this.version(2).stores({
-      plans: 'id, hazard, updatedAt',
-      sheets: 'id, type, updatedAt',
-      locations: 'id, type',
-      drillLog: 'id, planId, date',
-      settings: 'id',
-    });
-    // v3: paylaşım günlüğü (komşu/arkadaş/misafir/grup) — Hazırlık Skoru
-    // 'aile dışı haberdar' kontrolü artık gerçek veriden okur
+    this.version(2)
+      .stores({
+        plans: 'id, hazard, updatedAt',
+        sheets: 'id, type, updatedAt',
+        locations: 'id, type',
+        drillLog: '++id, planId, date', // değişmedi — PK değişimi Dexie'de yasak
+        drills: 'id, planId, date',     // yeni: client UUID anahtarlı
+        settings: 'id',
+      })
+      .upgrade(async (tx) => {
+        // eski auto-increment girdilerini UUID'li yeni tabloya taşı
+        const legacy = await tx.table('drillLog').toArray();
+        if (legacy.length) {
+          const rows: DrillEntry[] = legacy.map((d) => ({
+            id: crypto.randomUUID(),
+            planId: (d as DrillEntry).planId,
+            date: (d as DrillEntry).date,
+            kind: (d as DrillEntry).kind,
+          }));
+          await tx.table('drills').bulkPut(rows);
+        }
+      });
+    // v3: legacy drillLog düşürülür (veri v2'de drills'a taşındı) + shareLog
+    // (komşu/arkadaş/misafir/grup — skor 'aile dışı haberdar' gerçek veriden okur)
     this.version(3).stores({
       plans: 'id, hazard, updatedAt',
       sheets: 'id, type, updatedAt',
       locations: 'id, type',
-      drillLog: 'id, planId, date',
+      drills: 'id, planId, date',
       shareLog: 'id, planId, date',
       settings: 'id',
     });

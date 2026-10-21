@@ -114,6 +114,8 @@ export interface FamilyLocation {
   lat: number;
   lng: number;
   notes?: string;
+  updatedAt?: number; // LWW merge için; locations yazıcısı UI'sı gelene kadar
+                      // mevcut kayıtlarda yoktur (0 kabul edilir — add-only davranış)
 }
 
 export interface DrillEntry { id: string; planId: string; date: string; kind: 'full' | 'comms' | 'evac' }

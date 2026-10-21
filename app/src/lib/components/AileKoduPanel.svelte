@@ -77,6 +77,7 @@
     const file = input.files?.[0];
     if (!file) return;
     importPayload = (await file.text()).trim();
+    input.value = ''; // aynı dosya tekrar seçilince change tetiklensin (review-2)
   }
 
   onMount(ensureSettings);
@@ -109,11 +110,18 @@
           <div class="payloadbox">
             <textarea readonly rows="4" value={lastPayload} aria-label="Şifreli aile verisi"></textarea>
             <div class="actions">
-              <button class="btn" onclick={copyPayload}>📋 Kopyala</button>
-              <button class="btn" onclick={downloadPayload}>💾 Dosya indir (.hpk.txt)</button>
-              <button class="btn" onclick={() => {
-                if (navigator.share) navigator.share({ title: 'HazırPlan aile verisi', text: lastPayload }).catch(() => {});
-                else copyPayload();
+              <button class="btn" disabled={busy} onclick={copyPayload}>📋 Kopyala</button>
+              <button class="btn" disabled={busy} onclick={downloadPayload}>💾 Dosya indir (.hpk.txt)</button>
+              <button class="btn" disabled={busy} onclick={async () => {
+                if (navigator.share) {
+                  try { await navigator.share({ title: 'HazırPlan aile verisi', text: lastPayload }); }
+                  catch (e) {
+                    if ((e as Error).name !== 'AbortError') {
+                      console.error('Paylaşım hatası:', e);
+                      error = 'Paylaşılamadı — panoya kopyalayıp elle gönderin.';
+                    }
+                  }
+                } else { await copyPayload(); }
               }}>📤 Uygulamayla gönder</button>
             </div>
             <p class="hint">WhatsApp'ta bu metni göndermek uzun görünebilir — normaldir, şifreli pakettir.</p>

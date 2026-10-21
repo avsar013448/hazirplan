@@ -5,6 +5,7 @@
   import { db, getSettings } from '#lib/db/db';
   import type { ShareLogEntry } from '#lib/types';
   import { scorePlan, type ScoreResult } from '#lib/scoring/score';
+  import { pickPrimaryPlan } from '#lib/scoring/primary';
   import type { Plan, Sheet, DrillEntry, FamilyLocation, Settings } from '#lib/types';
   import Wizard from '#lib/components/Wizard.svelte';
 
@@ -20,7 +21,7 @@
   async function refresh() {
     plans = await db.plans.orderBy('updatedAt').reverse().toArray();
     sheets = await db.sheets.toArray();
-    drills = await db.drillLog.toArray();
+    drills = await db.drills.toArray();
     locations = await db.locations.toArray();
     shares = await db.shareLog.toArray();
     settings = await getSettings();
@@ -42,7 +43,8 @@
       score = null;
       return;
     }
-    const primary = plans[0]; // en güncel plan hane skorunu belirler
+    const primary = pickPrimaryPlan(plans); // en son OLUŞTURULAN plan (createdAt — karar code-review-2)
+    if (!primary) { score = null; return; }
     const linkedSheets = sheets.filter((s) => primary.sheetIds.includes(s.id));
     score = scorePlan(primary, linkedSheets, drills, settings, locations, ozelIhtiyacTitles, shares);
   }

@@ -3,7 +3,7 @@
   // Komşuya/arkadaşa telefonda göstermek veya buzdolabına asmak için.
   import { onMount } from 'svelte';
   import { page } from '$app/state';
-  import { db } from '#lib/db/db';
+  import { db, updateSettings } from '#lib/db/db';
   import type { Plan, Sheet } from '#lib/types';
 
   let plan = $state<Plan | null>(null);
@@ -20,7 +20,18 @@
       sheets = all.filter(Boolean) as Sheet[];
     }
   }
-  onMount(load);
+
+  // Gerçek yazdırma sinyali: afterprint — 'yazdırılmış kopya var' skorunun
+  // artık NİYET değil EYLEM takip etmesi (code-review-2).
+  async function onPrinted() {
+    try { await updateSettings({ printedCopy: true }); } catch (e) { console.error(e); }
+  }
+
+  onMount(() => {
+    load();
+    window.addEventListener('afterprint', onPrinted);
+    return () => window.removeEventListener('afterprint', onPrinted);
+  });
 </script>
 
 <svelte:head><title>{plan?.title ?? 'Misafir Görünümü'} — HazırPlan</title></svelte:head>

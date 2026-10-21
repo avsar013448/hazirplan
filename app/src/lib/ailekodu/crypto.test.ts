@@ -45,6 +45,19 @@ describe('Aile Kodu crypto', () => {
     expect(await decryptBundle(payload, 'ab12cd34')).toEqual({ k: 'v' });
   });
 
+  it('corrupted SALT segment gives the friendly error (not raw DOMException)', async () => {
+    const payload = await encryptBundle({ a: 1 }, 'AB12CD34');
+    const parts = payload.split('.');
+    parts[1] = '!!invalid-base64!!';
+    await expect(decryptBundle(parts.join('.'), 'AB12CD34')).rejects.toThrow(/Aile Kodu hatalı|bozuk/);
+  });
+
+  it('normalizeCode maps U→V and Turkish İ/ı→1 (documented Crockford aliases)', () => {
+    expect(normalizeCode('UB')).toBe('VB');
+    expect(normalizeCode('İB')).toBe('1B');
+    expect(normalizeCode('ıb')).toBe('1B');
+  });
+
   it('isFamilyPayload validates the envelope shape', () => {
     expect(isFamilyPayload('HPK1.AAAA.AAAA.AAAA')).toBe(true);
     expect(isFamilyPayload('selam')).toBe(false);

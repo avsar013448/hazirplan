@@ -28,8 +28,11 @@ self.addEventListener('activate', (event) => {
 });
 
 // Cache-first (tamamı yerel statik); ağ hiç gerekmez — offline-first taahhüdü.
+// Sadece AYNI ORIGIN cache'lenir (code-review-2: cross-origin GET'ler
+// versiyonlu cache'i başkası adına şişiriyordu).
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  if (new URL(event.request.url).origin !== self.location.origin) return;
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
