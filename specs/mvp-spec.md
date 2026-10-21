@@ -130,7 +130,7 @@ Her kontrol: **durum** (*"Planlanmadı"* = konu planda hiç geçmiyor / *"Başar
 3. **Plan detay** — step listesi + bağlı sheet'ler (accordion), Mark Complete, yazdır butonu, PACE/Tahliye boş slotları ("İletişim Planı bağlı değil" empty state)
 4. **Sheet editörleri** (6 tür) — checklist UI, quantity/expiry for çanta & envanter; PACE editöründe satır içi eğitim ("Primary: ana iletişim yönteminiz…")
 5. **Konumlar** — Leaflet map, tap-to-pin, offline tiles (home city), 5 konum cap
-6. **Aile Kodu** — generate QR / share code; import screen (QR scan or code entry); merge policy: latest write wins per sheet, version stamps
+6. **Aile Kodu** (`/aile`) — 8-karakter Crockford kod (o→0/i→1 typo toleransı) = aile kimliği + PBKDF2-SHA256 → AES-GCM-256 şifre anahtarı; "Şifreli Paket Hazırla" → HPK1 zarfı (salt.iv.ct); paylaşım: panoya kopyala / .hpk.txt indir / Web Share; **İçe Aktar**: kod + paket (yapıştır veya dosya) → LWW birleştirme (plans/sheets/locations/settings: updatedAt; drill/share log: id birleşimi; yerel aileKodu asla ezilmez) + birleştirme raporu. QR: Phase 2 backend ile (50KB paket QR'a sığmaz).
 7. **Tatbihat** — reminder interval per plan (default: ayda 1), local notification, "tatbikatı yaptım" → drillLog + puan
 8. **Başarımlar** — MVP set: 12 achievements (first plan, %100 çanta, ilk tatbihat, aileye kod gönder, envanter tam…), points, 3 levels (Hazırlık Çırağı → Hazırlık Ustası → Hazır Aile)
 9. **Ayarlar** — dil (tr), yazdırma, veri dışa/içe aktar (JSON), Aile Kodu yönetimi
